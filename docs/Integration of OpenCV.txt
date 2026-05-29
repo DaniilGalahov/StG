@@ -1,0 +1,8 @@
+To embed OpenCV into a C++ application, you must configure your development environment to recognize the library's headers (for code syntax) and binary files (for executable functionality).
+Core Integration Steps
+1. Download and Extract: Obtain the OpenCV Windows pack or source files from the official OpenCV releases page and extract them to a permanent location, such as C:\opencv\.
+2. Set System Environment Variables: Add the bin directory of your OpenCV installation (e.g., C:\opencv\build\x64\vc16\bin) to your system Path variable so the application can find the necessary .dll files at runtime.
+3. Configure Project Properties:
+3.1. Include Directories: Point your compiler to the header files. In Visual Studio, go to C/C++ -> General -> Additional Include Directories and add the opencv\build\include folder.
+3.2. Library Directories: Point the linker to the library files. Go to Linker -> General -> Additional Library Directories and add the opencv\build\x64\vc16\lib folder.
+3.3. Additional Dependencies: Specify the exact library file for your build. Under Linker -> Input -> Additional Dependencies, add opencv_worldXXX.lib (for Release) or opencv_worldXXXd.lib (for Debug), where XXX is your version number (e.g., 450).
