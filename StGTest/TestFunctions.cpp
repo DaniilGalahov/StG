@@ -3,8 +3,6 @@
 #include "Common.h"
 #include "Functions.h"
 
-#define PASSWORD "People are like water - they will always find a way."
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace StGTest

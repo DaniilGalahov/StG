@@ -13,3 +13,5 @@ void WriteToFile(std::vector<uint8_t> bytes, std::string filePath);
 std::vector<uint8_t> ToBytes(std::string str);
 
 bool AreEqual(const cv::Mat& a, const cv::Mat& b);
+
+#define PASSWORD "People are like water - they will always find a way."
