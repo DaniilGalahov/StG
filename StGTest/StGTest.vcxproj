@@ -92,7 +92,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\StGLib;C:\opencv\build\include;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\StGLib;..\..\AES\AESLib;C:\opencv\build\include;$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <UseFullPaths>true</UseFullPaths>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -158,10 +158,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Common.cpp" />
-    <ClCompile Include="ConvertTest.cpp" />
-    <ClCompile Include="StGTest.cpp" />
+    <ClCompile Include="TestConvert.cpp" />
+    <ClCompile Include="TestStGLib.cpp" />
+    <ClCompile Include="TestFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AES\AESLib\AESLib.vcxproj">
+      <Project>{75b6b04e-2f27-4c13-810e-edcded5b128e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\StGLib\StGLib.vcxproj">
       <Project>{885bd99f-011d-460b-a0c8-5c144068d5cd}</Project>
     </ProjectReference>

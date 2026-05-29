@@ -7,7 +7,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace StGTest
 {
-	TEST_CLASS(ConvertTest)
+	TEST_CLASS(TestConvert)
 	{
 	public:
 		TEST_METHOD(TestToCVMat)
