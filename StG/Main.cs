@@ -12,6 +12,8 @@ namespace StG
 {
     public partial class Main : Form
     {
+        private string passwordRegexPattern = $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{{8,}}$";
+
         public Main()
         {
             InitializeComponent();
@@ -95,6 +97,11 @@ namespace StG
             label_Embed_Status.Text = "Status: " + status;
         }
 
+        void SetExtractStatus(string status)
+        {
+            label_Extract_Status.Text = "Status: " + status;
+        }
+
         private bool EmbedFieldsReady()
         {
             if(!File.Exists(textBox_Embed_DataFilePath.Text))
@@ -115,7 +122,7 @@ namespace StG
                 return false;
             }
 
-            if (!Regex.IsMatch(textBox_Embed_Password.Text, $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+])[A-Za-z\\d!@#$%^&*()_+]{{8,}}$"))
+            if (!Regex.IsMatch(textBox_Embed_Password.Text, passwordRegexPattern))
             {
                 SetEmbedStatus("Password too weak");
                 return false;
@@ -130,9 +137,49 @@ namespace StG
             }
 
             if (textBox_Embed_StegoFilePath.Text.Length == 0
-            || !Directory.Exists(Path.GetDirectoryName(textBox_Embed_StegoFilePath.Text)))
+            || !Directory.Exists(Path.GetDirectoryName(textBox_Embed_StegoFilePath.Text))
+            || File.Exists(textBox_Embed_StegoFilePath.Text))
             {
                 SetEmbedStatus("Stego image file path incorrect");
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool ExtractFieldsReady()
+        {
+            if (!File.Exists(textBox_Extract_StegoFilePath.Text))
+            {
+                SetExtractStatus("Stego image file does not exist");
+                return false;
+            }
+
+            if (Path.GetExtension(textBox_Extract_StegoFilePath.Text) != ".png")
+            {
+                SetExtractStatus("Carrier image file extension incorrect");
+                return false;
+            }
+
+            if (!Regex.IsMatch(textBox_Extract_Password.Text, passwordRegexPattern))
+            {
+                SetExtractStatus("Password format incorrect");
+                return false;
+            }
+
+            if ((Mode)comboBox_Extract_EncryptionMode.SelectedIndex != Mode.AES128
+            && (Mode)comboBox_Extract_EncryptionMode.SelectedIndex != Mode.AES192
+            && (Mode)comboBox_Extract_EncryptionMode.SelectedIndex != Mode.AES256)
+            {
+                SetExtractStatus("Encryption mode incorrect");
+                return false;
+            }
+
+            if (textBox_Extract_DataFilePath.Text.Length == 0
+            || !Directory.Exists(Path.GetDirectoryName(textBox_Extract_DataFilePath.Text))
+            || File.Exists(textBox_Extract_DataFilePath.Text))
+            {
+                SetExtractStatus("Data file path incorrect");
                 return false;
             }
 
@@ -146,9 +193,9 @@ namespace StG
             if (EmbedFieldsReady())
             {
                 DisableControls();
-                
+
                 SetEmbedStatus("Embedding data");
-                
+
                 Byte[] data = File.ReadAllBytes(textBox_Embed_DataFilePath.Text);
                 Byte[] password = Encoding.UTF8.GetBytes(textBox_Embed_Password.Text);
                 Mode mode = (Mode)comboBox_Embed_EncryptionMode.SelectedIndex;
@@ -169,49 +216,6 @@ namespace StG
 
                 EnableControls();
             }
-        }
-
-        void SetExtractStatus(string status)
-        {
-            label_Extract_Status.Text = "Status: " + status;
-        }
-
-        private bool ExtractFieldsReady()
-        {
-            if (!File.Exists(textBox_Extract_StegoFilePath.Text))
-            {
-                SetExtractStatus("Stego image file does not exist");
-                return false;
-            }
-
-            if (Path.GetExtension(textBox_Extract_StegoFilePath.Text) != ".png")
-            {
-                SetExtractStatus("Carrier image file extension incorrect");
-                return false;
-            }
-
-            if (!Regex.IsMatch(textBox_Extract_Password.Text, $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+])[A-Za-z\\d!@#$%^&*()_+]{{8,}}$"))
-            {
-                SetExtractStatus("Password format incorrect");
-                return false;
-            }
-
-            if ((Mode)comboBox_Extract_EncryptionMode.SelectedIndex != Mode.AES128
-            && (Mode)comboBox_Extract_EncryptionMode.SelectedIndex != Mode.AES192
-            && (Mode)comboBox_Extract_EncryptionMode.SelectedIndex != Mode.AES256)
-            {
-                SetExtractStatus("Encryption mode incorrect");
-                return false;
-            }
-
-            if (textBox_Extract_DataFilePath.Text.Length == 0
-            || !Directory.Exists(Path.GetDirectoryName(textBox_Extract_DataFilePath.Text)))
-            {
-                SetExtractStatus("Data file path incorrect");
-                return false;
-            }
-
-            return true;
         }
 
         private void buttonExtract_Click(object sender, EventArgs e)
