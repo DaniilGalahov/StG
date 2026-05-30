@@ -67,7 +67,7 @@ User interface of the app allows to:
 
 ##### "Extract" tab
 
-![User interface - extract](/images/GUI_Extact.png)
+![User interface - extract](/images/GUI_Extract.png)
 
 - **Stego image file** field - displays (and allows to input) path to file of stego image, which contains *encrypted data to extract*.
 - **Password** field - allows to input your password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
