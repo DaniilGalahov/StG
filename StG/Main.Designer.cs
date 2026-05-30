@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.tabMode = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label_Embed_Status = new System.Windows.Forms.Label();
@@ -65,6 +66,8 @@
             this.saveFileDialog_CreateStegoFile = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog_SelectStegoFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog_CreateDataFile = new System.Windows.Forms.SaveFileDialog();
+            this.linkLabel_Embed_Help = new System.Windows.Forms.LinkLabel();
+            this.linkLabel_Extract_Help = new System.Windows.Forms.LinkLabel();
             this.tabMode.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -82,6 +85,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.linkLabel_Embed_Help);
             this.tabPage1.Controls.Add(this.label_Embed_Status);
             this.tabPage1.Controls.Add(this.buttonEmbed);
             this.tabPage1.Controls.Add(this.button_Embed_CreateStegoFile);
@@ -254,6 +258,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.linkLabel_Extract_Help);
             this.tabPage2.Controls.Add(this.label_Extract_Status);
             this.tabPage2.Controls.Add(this.buttonExtract);
             this.tabPage2.Controls.Add(this.button_Extract_CreateDataFile);
@@ -419,6 +424,28 @@
             // 
             this.saveFileDialog_CreateDataFile.Title = "Save data to file";
             // 
+            // linkLabel_Embed_Help
+            // 
+            this.linkLabel_Embed_Help.AutoSize = true;
+            this.linkLabel_Embed_Help.Location = new System.Drawing.Point(541, 255);
+            this.linkLabel_Embed_Help.Name = "linkLabel_Embed_Help";
+            this.linkLabel_Embed_Help.Size = new System.Drawing.Size(29, 13);
+            this.linkLabel_Embed_Help.TabIndex = 16;
+            this.linkLabel_Embed_Help.TabStop = true;
+            this.linkLabel_Embed_Help.Text = "Help";
+            this.linkLabel_Embed_Help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
+            // 
+            // linkLabel_Extract_Help
+            // 
+            this.linkLabel_Extract_Help.AutoSize = true;
+            this.linkLabel_Extract_Help.Location = new System.Drawing.Point(541, 255);
+            this.linkLabel_Extract_Help.Name = "linkLabel_Extract_Help";
+            this.linkLabel_Extract_Help.Size = new System.Drawing.Size(29, 13);
+            this.linkLabel_Extract_Help.TabIndex = 32;
+            this.linkLabel_Extract_Help.TabStop = true;
+            this.linkLabel_Extract_Help.Text = "Help";
+            this.linkLabel_Extract_Help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -426,6 +453,7 @@
             this.ClientSize = new System.Drawing.Size(605, 307);
             this.Controls.Add(this.tabMode);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Main";
@@ -478,6 +506,8 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.OpenFileDialog openFileDialog_SelectStegoFile;
         private System.Windows.Forms.SaveFileDialog saveFileDialog_CreateDataFile;
+        private System.Windows.Forms.LinkLabel linkLabel_Embed_Help;
+        private System.Windows.Forms.LinkLabel linkLabel_Extract_Help;
     }
 }
 

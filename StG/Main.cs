@@ -235,5 +235,22 @@ namespace StG
                 EnableControls();
             }
         }
+
+        private void linkLabelHelp_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                var psi = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "https://github.com/DaniilGalahov/StG",
+                    UseShellExecute = true
+                };
+                System.Diagnostics.Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Cannot open link. " + ex.Message);
+            }
+        }
     }
 }
