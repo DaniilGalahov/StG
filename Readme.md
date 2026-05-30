@@ -56,7 +56,9 @@ User interface of the app allows to:
 - receive feedback from the app
 
 ##### "Embed" tab
-![User interface - embed](/Images/GUI_Embed.png)
+
+![User interface - embed](/images/GUI_Embed.png)
+
 - **Data file** field - displays (and allows to input) path to file with data you want to *embed*.
 - **Carrier image file** field - displays (and allows to input) path to file of carrier image *into which you want to embed* data.
 - **Password** field - allows to input your password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
@@ -64,7 +66,9 @@ User interface of the app allows to:
 - **Stego image file** field - displays (and allows to input) path to file of stego image (which is the *result of embedding operation*).
 
 ##### "Extract" tab
-![User interface - extract](/Images/GUI_Extact.png)
+
+![User interface - extract](/images/GUI_Extact.png)
+
 - **Stego image file** field - displays (and allows to input) path to file of stego image, which contains *encrypted data to extract*.
 - **Password** field - allows to input your password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
 - **Encryption mode** combo box - displays selected AES mode and allows to select other available (*AES-128*, *AES-192* or *AES-256*).
