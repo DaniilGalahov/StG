@@ -46,6 +46,22 @@ namespace StG
         {
             if (saveFileDialog_CreateStegoFile.ShowDialog() == DialogResult.OK)
             {
+                if (File.Exists(saveFileDialog_CreateStegoFile.FileName))
+                {
+                    DialogResult confirmResult = MessageBox.Show
+                    (
+                        "Selected file already exists. Choose other file to save stego image.",
+                        "Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+
+                    if (confirmResult == DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+
                 textBox_Embed_StegoFilePath.Text = saveFileDialog_CreateStegoFile.FileName;
             }
         }
@@ -62,6 +78,22 @@ namespace StG
         {
             if(saveFileDialog_CreateDataFile.ShowDialog()==DialogResult.OK)
             {
+                if (File.Exists(saveFileDialog_CreateDataFile.FileName))
+                {
+                    DialogResult confirmResult = MessageBox.Show
+                    (
+                        "Selected file already exists. Choose other file to save extracted data.",
+                        "Warning",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+
+                    if (confirmResult == DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+
                 textBox_Extract_DataFilePath.Text = saveFileDialog_CreateDataFile.FileName;
             }
         }
