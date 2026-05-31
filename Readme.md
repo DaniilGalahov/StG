@@ -130,3 +130,26 @@ After this, you need to open **Visual Studio Installer -> Individual components*
 - Rebuild solution (typically *Ctrl+Alt+F7*)
 
 Now you are ready to work.
+
+#### Contents
+This repository provides:
+- Static C++ library **StGLib**, implementing core steganography functional (embedding and extracting with adaptive embedding and randomized selection)
+- C++/CLI interface **StGBridge**, providing access to StGLib functional from C#-based apps
+- C ABI **StGABI**, providing access to StGLib functional from any managed language (Java, Python, Rust, TypeScript, you name it)
+
+#### Connecting to third-party project
+Library made to be versalite and easy for usage, so to connect it to other project, you should follow standard library integration procedure.
+
+**To use in C++ project:**
+- add StGLib and AESLib in list of projects of your solution through *Add... -> Existing project...*.
+- add references to StGLib and AESLib in project *References*.
+- in your project settings, open *C/C++ -> General -> Additional Include Directories*, and add there:
+	- include directory of StGLib (your `StG\StGLib`).
+	- include directory of Rijndael AESLib (your `AES\AESLib`).
+	- include directory of OpenCV (`C:\opencv\build\include`).
+
+**To use in C# project:**
+- add StGBridge in list of projects of your solution through *Add... -> Existing project...*.
+- add reference to StGBridge in your project.
+
+**To use with other programming languages**, follow the standard library integration procedure for selected language. For example, in Python you can use [ctypes](https://docs.python.org/3/library/ctypes.html) library.
