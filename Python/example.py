@@ -1,3 +1,4 @@
+#Example of usage StGABI.dll in Python (created with ChatGPT as co-programmer)
 import os
 import ctypes
 from ctypes import CDLL, POINTER, c_uint8, c_size_t, c_int, c_void_p, byref, string_at

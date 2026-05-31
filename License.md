@@ -16,6 +16,8 @@ If the Software is modified, the modified version must include a prominent note 
 This Software uses the **Rijndael AESLib**, written by **Daniil Galakhov** and published at GitHub repository:
 [https://github.com/DaniilGalahov/Rijndael-AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib)
 
+This software uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. Copyright Notices included at [License_OpenCV](/License_OpenCV.txt).
+
 ## 3. Disclaimer of Warranty and Liability
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
 

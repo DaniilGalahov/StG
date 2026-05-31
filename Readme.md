@@ -377,3 +377,26 @@ Then, use this helper functions to embed and extract data.
 Full source code of Python example you may find in file [Python/example.py](https://github.com/DaniilGalahov/StG/blob/master/Python/example.py).
 
 *Notice, that functions of StGLib does not implement AES encryption.* To add AES ciphering to your project you should use external libraries such as my [Rijndael AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib).
+
+---
+## Questions
+Feel free to ask me if you have any questions or offers.
+
+## Legal notice
+This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
+
+The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. Copyright Notices included at [License_OpenCV](/License_OpenCV.txt).
+
+**Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
+
+App icon was created from logo image using [PNG-to-ICO](https://github.com/FoxP/PNG-to-ICO).
+
+---
+## Support & donations
+If you like this software, please, support me with donations. This will allow me to spend more time on improvement of my projects. Any help will count.
+
+**VISA card (Halyk bank, Worldwide):** 4003 0351 5709 6871
+
+**МИР card (T-bank, Russia only):** 2200 7021 5287 4603
+
+**Recepient:** Daniil Galakhov
