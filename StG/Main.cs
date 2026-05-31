@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace StG
@@ -17,6 +16,14 @@ namespace StG
         public Main()
         {
             InitializeComponent();
+            toolTip.SetToolTip(textBox_Embed_DataFilePath, "Path to file with data-to-hide");
+            toolTip.SetToolTip(textBox_Embed_CarrierFilePath, "Path to .png image file in which you want to hide data");
+            toolTip.SetToolTip(textBox_Embed_Password, "At least 8 symbols with string and capital letters, digits and special characters");
+            toolTip.SetToolTip(textBox_Embed_StegoFilePath, "Path to result .png image file");
+
+            toolTip.SetToolTip(textBox_Extract_StegoFilePath, "Path to .png image file containing hidden data");
+            toolTip.SetToolTip(textBox_Extract_Password, "Same password you used on embedding");
+            toolTip.SetToolTip(textBox_Extract_DataFilePath, "Path to result file with extracted data");
         }
 
         private void button_Embed_SelectDataFile_Click(object sender, EventArgs e)

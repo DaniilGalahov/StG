@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.tabMode = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.linkLabel_Embed_Help = new System.Windows.Forms.LinkLabel();
             this.label_Embed_Status = new System.Windows.Forms.Label();
             this.buttonEmbed = new System.Windows.Forms.Button();
             this.button_Embed_CreateStegoFile = new System.Windows.Forms.Button();
@@ -48,6 +50,7 @@
             this.textBox_Embed_DataFilePath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.linkLabel_Extract_Help = new System.Windows.Forms.LinkLabel();
             this.label_Extract_Status = new System.Windows.Forms.Label();
             this.buttonExtract = new System.Windows.Forms.Button();
             this.button_Extract_CreateDataFile = new System.Windows.Forms.Button();
@@ -66,8 +69,7 @@
             this.saveFileDialog_CreateStegoFile = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog_SelectStegoFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog_CreateDataFile = new System.Windows.Forms.SaveFileDialog();
-            this.linkLabel_Embed_Help = new System.Windows.Forms.LinkLabel();
-            this.linkLabel_Extract_Help = new System.Windows.Forms.LinkLabel();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.tabMode.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -109,6 +111,17 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Embed";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // linkLabel_Embed_Help
+            // 
+            this.linkLabel_Embed_Help.AutoSize = true;
+            this.linkLabel_Embed_Help.Location = new System.Drawing.Point(541, 255);
+            this.linkLabel_Embed_Help.Name = "linkLabel_Embed_Help";
+            this.linkLabel_Embed_Help.Size = new System.Drawing.Size(29, 13);
+            this.linkLabel_Embed_Help.TabIndex = 16;
+            this.linkLabel_Embed_Help.TabStop = true;
+            this.linkLabel_Embed_Help.Text = "Help";
+            this.linkLabel_Embed_Help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
             // 
             // label_Embed_Status
             // 
@@ -176,6 +189,7 @@
             this.comboBox_Embed_EncryptionMode.Name = "comboBox_Embed_EncryptionMode";
             this.comboBox_Embed_EncryptionMode.Size = new System.Drawing.Size(121, 21);
             this.comboBox_Embed_EncryptionMode.TabIndex = 9;
+            this.comboBox_Embed_EncryptionMode.Text = "AES-128";
             // 
             // textBox_Embed_Password
             // 
@@ -280,6 +294,17 @@
             this.tabPage2.Text = "Extract";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // linkLabel_Extract_Help
+            // 
+            this.linkLabel_Extract_Help.AutoSize = true;
+            this.linkLabel_Extract_Help.Location = new System.Drawing.Point(541, 255);
+            this.linkLabel_Extract_Help.Name = "linkLabel_Extract_Help";
+            this.linkLabel_Extract_Help.Size = new System.Drawing.Size(29, 13);
+            this.linkLabel_Extract_Help.TabIndex = 32;
+            this.linkLabel_Extract_Help.TabStop = true;
+            this.linkLabel_Extract_Help.Text = "Help";
+            this.linkLabel_Extract_Help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
+            // 
             // label_Extract_Status
             // 
             this.label_Extract_Status.AutoSize = true;
@@ -346,6 +371,7 @@
             this.comboBox_Extract_EncryptionMode.Name = "comboBox_Extract_EncryptionMode";
             this.comboBox_Extract_EncryptionMode.Size = new System.Drawing.Size(121, 21);
             this.comboBox_Extract_EncryptionMode.TabIndex = 25;
+            this.comboBox_Extract_EncryptionMode.Text = "AES-128";
             // 
             // textBox_Extract_Password
             // 
@@ -424,28 +450,6 @@
             // 
             this.saveFileDialog_CreateDataFile.Title = "Save data to file";
             // 
-            // linkLabel_Embed_Help
-            // 
-            this.linkLabel_Embed_Help.AutoSize = true;
-            this.linkLabel_Embed_Help.Location = new System.Drawing.Point(541, 255);
-            this.linkLabel_Embed_Help.Name = "linkLabel_Embed_Help";
-            this.linkLabel_Embed_Help.Size = new System.Drawing.Size(29, 13);
-            this.linkLabel_Embed_Help.TabIndex = 16;
-            this.linkLabel_Embed_Help.TabStop = true;
-            this.linkLabel_Embed_Help.Text = "Help";
-            this.linkLabel_Embed_Help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
-            // 
-            // linkLabel_Extract_Help
-            // 
-            this.linkLabel_Extract_Help.AutoSize = true;
-            this.linkLabel_Extract_Help.Location = new System.Drawing.Point(541, 255);
-            this.linkLabel_Extract_Help.Name = "linkLabel_Extract_Help";
-            this.linkLabel_Extract_Help.Size = new System.Drawing.Size(29, 13);
-            this.linkLabel_Extract_Help.TabIndex = 32;
-            this.linkLabel_Extract_Help.TabStop = true;
-            this.linkLabel_Extract_Help.Text = "Help";
-            this.linkLabel_Extract_Help.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelHelp_LinkClicked);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -508,6 +512,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog_CreateDataFile;
         private System.Windows.Forms.LinkLabel linkLabel_Embed_Help;
         private System.Windows.Forms.LinkLabel linkLabel_Extract_Help;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 
