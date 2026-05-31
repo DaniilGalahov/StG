@@ -397,7 +397,7 @@ Feel free to ask me if you have any questions or offers.
 ## Legal notice
 This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
 
-The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. Copyright Notices included at [License_OpenCV](/License_OpenCV.txt).
+The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. Copyright Notices included at [OpenCV_license.txt](/OpenCV_license.txt").
 
 **Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
 
