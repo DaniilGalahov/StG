@@ -87,3 +87,46 @@ In fields **Data file**, **Carrier image file** and **Stego image file** of both
 ---
 <a id="StG_development"></a>
 ### StG Framework
+
+#### Purpose
+This library provides open-source, fully-tested (code coverage by tests ~95%) implementation of advanced steganography with AES encryption for .png image files. Feel free to use it in your own projects (of course, following [License](/License.md) terms).
+
+#### Requirements
+- Windows-based OS (Developed on Win 10)
+- [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/) 2022 Version 17.14.33 (May 2026)
+	- Microsoft.Component.MSBuild
+	- Visual C++ 2022 (package ***"Desktop development with C++"*** in VS Installer)
+		- Microsoft.VisualStudio.Component.VC.Redist.14.Latest
+		- Microsoft.VisualStudio.Component.VC.CLI.Support
+	- C# Tools 4.14.0 (package   in VS Installer)
+		- Microsoft.Net.Component.4.8.SDK
+		- Microsoft.Net.Component.4.8.TargetingPack
+- [OpenCV 4.12.0](https://github.com/opencv/opencv/releases/download/4.12.0/opencv-4.12.0-windows.exe)
+- [Rijndael AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib)
+
+#### IDE/SDK configuration
+For installation of all required components you need to open **Visual Studio Installer -> Workloads**, and install next packages:
+- ***Desktop development with C++***
+- ***.NET desktop development***
+
+After this, you need to open **Visual Studio Installer -> Individual components**, and there install next components:
+- ***.NET Framework 4.8 SDK***
+- ***.NET Framework 4.8 targeting pack***
+- ***C++/CLI support for v143 build tools (Latest)***
+
+#### Deployment
+- Deploy OpenCV
+	- Download [OpenCV 4.12.0](https://github.com/opencv/opencv/releases/download/4.12.0/opencv-4.12.0-windows.exe).
+	- Extract it into `C:\opencv`.
+	- Add the bin directory of your OpenCV installation (e.g., `C:\opencv\build\x64\vc16\bin`) to your *system* `Path` [variable](https://en.wikipedia.org/wiki/PATH_(variable)#DOS,_OS/2,_and_Windows).
+- Prepare folder structure
+	- Create root folder of the project.
+	- Inside this folder, create subfolders `AES` and `STG`.
+- Clone Rijndael AESLib repo to `AES` folder using:
+`git clone https://github.com/DaniilGalahov/Rijndael-AESLib.git`
+- Clone this repo to `StG` folder using:
+`git clone https://github.com/DaniilGalahov/StG.git`
+- Open it in Visual Studio
+- Rebuild solution (typically *Ctrl+Alt+F7*)
+
+Now you are ready to work.
