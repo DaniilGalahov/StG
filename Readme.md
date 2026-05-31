@@ -70,6 +70,8 @@ This tab allows to embed data to carrier image.
 - **Stego image file** field - displays (and allows to input) path to file of stego image (which is the *result of embedding operation*).
 - **Embed** button - initialize embedding operation. Before embedding, system validates all parameters. If something is wrong, system will output a report in "Status" field in the lower left corner of the window.
 
+*If data volume is too big for this carrier, system will report status "StGLib::Embed failed." In this case choose bigger carrier image.*
+
 ##### "Extract" tab
 
 ![User interface - extract](/images/GUI_Extract.png)
@@ -153,3 +155,71 @@ Library made to be versalite and easy for usage, so to connect it to other proje
 - add reference to StGBridge in your project.
 
 **To use with other programming languages**, follow the standard library integration procedure for selected language. For example, in Python you can use [ctypes](https://docs.python.org/3/library/ctypes.html) library.
+
+#### Coding
+
+##### C++
+1. Include `std::vector` (you will need it for work with library) and library header itself
+``` c++
+#include <vector>
+#include "StGLib.h"
+```
+
+2. Define helper functions
+```
+std::vector<uint8_t> LoadBytesFromFile(std::string filePath)
+{
+	//reads data from file (via ifstream or any other way) and converts it into array of bytes
+}
+
+std::vector<uint8_t> ToBytes(std::string str)
+{
+	//converts std::string into array of bytes
+}
+```
+
+3. To embed data
+``` c++
+	std::vector<uint8_t> carrierImageBytes = LoadBytesFromFile(carrierFilePath); //load carrier image file as an array of bytes
+	std::vector<uint8_t> dataBytes = LoadBytesFromFile(dataFilePath); //load data file as an array of bytes
+	std::vector<uint8_t> passwordBytes = ToBytes(password); //converts password string into array of bytes
+	std::vector<uint8_t> stegoImageBytes; //prepare array of bytes for stego image
+	int result = StGLib::Embed(stegoImageBytes, carrierImageBytes, dataBytes, passwordBytes); //embed data to carrier using password as a salt for embedding
+```
+**Note:** `StGLib::Embed()` will return `-1` in case if carrier has not enough volume for given data. 
+
+4. To extract data
+``` c++
+	std::vector<uint8_t> stegoImageBytes = LoadFromFile(stegoFilePath);
+	std::vector<uint8_t> passwordBytes = ToBytes(password);
+	std::vector<uint8_t> dataBytes;
+	int result = StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes);
+```
+
+##### C#
+1. Use `System` and `StGBridge`
+``` c#
+using System;
+using StGBridge;
+```
+
+2. To embed data
+``` c#
+	Byte[] dataBytes = File.ReadAllBytes(dataFilePath); //read everything from data file into array of bytes
+	Byte[] carrierBytes = File.ReadAllBytes(carrierFilePath); //read everything from carrier image file into array of bytes
+	Byte[] passwordBytes = Encoding.UTF8.GetBytes(password); //converting password string into array of bytes
+	try
+	{
+		Byte[] stegoBytes = StGBridge.StG.Embed(carrierBytes, dataBytes, passwordBytes); //embedding data to carrier
+	}
+	catch (Exception ex)
+	{
+		//system will throw exception in case if carrier has not enough volume for given data
+	}
+```
+3. To extract data
+``` c#
+	Byte[] stegoBytes = File.ReadAllBytes(stegoFilePath);
+	Byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+	Byte[] dataBytes = StGBridge.StG.Extract(stegoBytes, passwordBytes);
+```
