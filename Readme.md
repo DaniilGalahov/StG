@@ -180,19 +180,35 @@ std::vector<uint8_t> ToBytes(std::string str)
 
 3. To embed data
 ``` c++
-	std::vector<uint8_t> carrierImageBytes = LoadBytesFromFile(carrierFilePath); //load carrier image file as an array of bytes
-	std::vector<uint8_t> dataBytes = LoadBytesFromFile(dataFilePath); //load data file as an array of bytes
-	std::vector<uint8_t> passwordBytes = ToBytes(password); //converts password string into array of bytes
-	std::vector<uint8_t> stegoImageBytes; //prepare array of bytes for stego image
-	int result = StGLib::Embed(stegoImageBytes, carrierImageBytes, dataBytes, passwordBytes); //embed data to carrier using password as a salt for embedding
+	//load carrier image file as an array of bytes
+	std::vector<uint8_t> carrierImageBytes = LoadBytesFromFile(carrierFilePath);
+
+	//load data file as an array of bytes
+	std::vector<uint8_t> dataBytes = LoadBytesFromFile(dataFilePath);
+
+	//converts password string into array of bytes
+	std::vector<uint8_t> passwordBytes = ToBytes(password);
+
+	//prepare array of bytes for stego image
+	std::vector<uint8_t> stegoImageBytes;
+
+	//embed data to carrier using password as a salt for embedding
+	int result = StGLib::Embed(stegoImageBytes, carrierImageBytes, dataBytes, passwordBytes);
 ```
 **Note:** `StGLib::Embed()` will return `-1` in case if carrier has not enough volume for given data. 
 
 4. To extract data
 ``` c++
+	//load stego image file as an array of bytes
 	std::vector<uint8_t> stegoImageBytes = LoadFromFile(stegoFilePath);
+
+	//converts password string into array of bytes
 	std::vector<uint8_t> passwordBytes = ToBytes(password);
+
+	//prepare array of bytes for data
 	std::vector<uint8_t> dataBytes;
+
+	//extract data from stego image
 	int result = StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes);
 ```
 
@@ -205,12 +221,19 @@ using StGBridge;
 
 2. To embed data
 ``` c#
-	Byte[] dataBytes = File.ReadAllBytes(dataFilePath); //read everything from data file into array of bytes
-	Byte[] carrierBytes = File.ReadAllBytes(carrierFilePath); //read everything from carrier image file into array of bytes
-	Byte[] passwordBytes = Encoding.UTF8.GetBytes(password); //converting password string into array of bytes
+	//read everything from data file into array of bytes
+	Byte[] dataBytes = File.ReadAllBytes(dataFilePath);
+
+	//read everything from carrier image file into array of bytes
+	Byte[] carrierBytes = File.ReadAllBytes(carrierFilePath);
+
+	//converting password string into array of bytes
+	Byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+
 	try
 	{
-		Byte[] stegoBytes = StGBridge.StG.Embed(carrierBytes, dataBytes, passwordBytes); //embedding data to carrier
+		//embedding data to carrier
+		Byte[] stegoBytes = StGBridge.StG.Embed(carrierBytes, dataBytes, passwordBytes);
 	}
 	catch (Exception ex)
 	{
@@ -219,7 +242,12 @@ using StGBridge;
 ```
 3. To extract data
 ``` c#
+	//read everything from stego image file into array of bytes
 	Byte[] stegoBytes = File.ReadAllBytes(stegoFilePath);
+
+	//converting password string into array of bytes
 	Byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+
+	//extracting data from stego image
 	Byte[] dataBytes = StGBridge.StG.Extract(stegoBytes, passwordBytes);
 ```
