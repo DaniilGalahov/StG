@@ -251,3 +251,129 @@ using StGBridge;
 	//extracting data from stego image
 	Byte[] dataBytes = StGBridge.StG.Extract(stegoBytes, passwordBytes);
 ```
+
+##### Python
+*As an example of usage in managed languages*
+1. **Obligatorily** add OpenCV dll directory to Python paths
+``` python
+import os
+os.add_dll_directory(r"C:\opencv\build\x64\vc16\bin")
+```
+
+2. Use `ctypes` to load **StGABI.dll**
+``` python
+import ctypes
+from ctypes import CDLL
+
+dll_path = os.path.abspath(r"..\\x64\\Release\\StGABI.dll")
+stgabi = CDLL(dll_path)
+```
+
+3. Define .dll functions signatures
+``` python
+from ctypes import POINTER, c_uint8, c_size_t, c_int, c_void_p, byref,
+
+stgabi.Embed.argtypes = [
+    POINTER(c_uint8), c_size_t,
+    POINTER(c_uint8), c_size_t,
+    POINTER(c_uint8), c_size_t,
+    POINTER(POINTER(c_uint8)), POINTER(c_size_t)
+]
+stgabi.Embed.restype = c_int
+
+stgabi.Extract.argtypes = [
+    POINTER(c_uint8), c_size_t,
+    POINTER(c_uint8), c_size_t,
+    POINTER(POINTER(c_uint8)), POINTER(c_size_t)
+]
+stgabi.Extract.restype = c_int
+
+stgabi.FreeMemory.argtypes = [c_void_p]
+stgabi.FreeMemory.restype = None
+```
+
+4. Define Python helper functions
+``` python
+def read_bytes(path):
+    with open(path, "rb") as f:
+        return f.read()
+
+def write_bytes(path, data):
+    with open(path, "wb") as f:
+        f.write(data)
+
+def embed(data_path, carrier_path, password, stego_path):
+    # Read file bytes
+    carrier_bytes = read_bytes(carrier_path)
+    data_bytes = read_bytes(data_path)
+
+    # Prepare pointers
+    carrier_ptr = (c_uint8 * len(carrier_bytes))(*carrier_bytes)
+    data_ptr = (c_uint8 * len(data_bytes))(*data_bytes)
+    password_ptr = (c_uint8 * len(password))(*password)
+
+    stego_ptr = POINTER(c_uint8)()
+    stego_size = c_size_t()
+
+    # Call C ABI function
+    res = stgabi.Embed(
+        carrier_ptr, len(carrier_bytes),
+        data_ptr, len(data_bytes),
+        password_ptr, len(password),
+        byref(stego_ptr), byref(stego_size)
+    )
+    
+    if res != 0:
+        raise RuntimeError(f"Embed failed with code {res}")
+
+    # Convert result to Python bytes
+    stego_bytes = string_at(stego_ptr, stego_size.value)
+
+    # Write bytes to stego
+    write_bytes(stego_path, stego_bytes)
+
+    # Free memory
+    stgabi.FreeMemory(stego_ptr)
+
+    print(f"Embedded data into {stego_path}")
+
+def extract(stego_path, password, extracted_path):
+    # Read file bytes
+    stego_bytes = read_bytes(stego_path)
+
+    # Prepare pointers
+    stego_ptr = (c_uint8 * len(stego_bytes))(*stego_bytes)
+    password_ptr = (c_uint8 * len(password))(*password)
+
+    extracted_ptr = POINTER(c_uint8)()
+    extracted_size = c_size_t()
+
+    # Call C ABI function
+    res = stgabi.Extract(
+        stego_ptr, len(stego_bytes),
+        password_ptr, len(password),
+        byref(extracted_ptr), byref(extracted_size)
+    )
+
+    if res != 0:
+        raise RuntimeError(f"Extract failed with code {res}")
+
+    # Convert result to Python bytes
+    extracted_bytes = string_at(extracted_ptr, extracted_size.value)
+
+    # Write bytes to result file
+    write_bytes(extracted_path, extracted_bytes)
+
+    # Free memory
+    stgabi.FreeMemory(extracted_ptr)
+
+    print(f"Extracted data to {extracted_path}")
+```
+
+Then, use this helper functions to embed and extract data.
+
+**Important!** Always use `stgabi.FreeBuffer()` to free memory buffer after usage of `stgabi.Embed()` and `stgabi.Extract()` *exactly* as it shown above to avoid memory leaks.
+
+Full source code of Python example you may find in file [Python/example.py](https://github.com/DaniilGalahov/StG/blob/master/Python/example.py).
+
+*Notice, that functions of StGLib does not implement AES encryption.* To add AES ciphering to your project you should use external libraries such as my [Rijndael AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib).
