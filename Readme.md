@@ -379,6 +379,18 @@ Full source code of Python example you may find in file [Python/example.py](http
 *Notice, that functions of StGLib does not implement AES encryption.* To add AES ciphering to your project you should use external libraries such as my [Rijndael AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib).
 
 ---
+## Roadmap of further development
+- Improve base functional
+	- Reduce distributive size
+	- Stego density control
+	- Consume different image formats as carrier
+- Mobile OS versions
+	- Android version
+	- iOS version (donations for MacBook & iPhone required!)
+- Stego-messenger **Narodovolets** - distributed, secured, free messenger for all main platforms
+- Advanced stego algorithms (ISGANs, DCT, DWT, RDH)
+
+---
 ## Questions
 Feel free to ask me if you have any questions or offers.
 
