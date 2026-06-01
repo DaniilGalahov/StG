@@ -387,7 +387,7 @@ Full source code of Python example you may find in file [Python/example.py](http
 - Mobile OS versions
 	- Android version
 	- iOS version (donations for MacBook & iPhone required!)
-- Stego-messenger **Narodovolets** - distributed, secured, free messenger for all main platforms
+- Stego-messenger - distributed, secured, free messenger for all main platforms
 - Advanced stego algorithms (ISGANs, DCT, DWT, RDH)
 
 ---
