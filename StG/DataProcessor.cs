@@ -6,32 +6,34 @@ using StGBridge;
 
 namespace StG
 {
-    internal class DataProcessor
+    public static class DataProcessor
     {
-        Byte[] Zip(Byte[] dataBytes)
+        public static Byte[] Compress(Byte[] dataBytes)
         {
-            MemoryStream dataStream = new MemoryStream();
-            using (dataStream)
+            using (var compressedDataStream = new MemoryStream())
             {
-                dataStream.Write(dataBytes, 0, dataBytes.Length);
-                dataStream.Position = 0;
-            }
-
-            MemoryStream zippedDataStream = new MemoryStream();
-            using (zippedDataStream)
-            {
-                using (GZipStream compressor = new GZipStream(zippedDataStream, CompressionMode.Compress))
+                using (var gZipStream = new GZipStream(compressedDataStream, CompressionMode.Compress))
                 {
-                    dataStream.CopyTo(compressor);
+                    gZipStream.Write(dataBytes, 0, dataBytes.Length);
+                    gZipStream.Close();
+                    return compressedDataStream.ToArray();
                 }
             }
+        }
 
-            Byte[] zippedDataBytes = zippedDataStream.ToArray();
-
-            dataStream.Close();
-            zippedDataStream.Close();
-
-            return zippedDataBytes;
+        public static Byte[] Decompress(Byte[] compressedDataBytes)
+        {
+            using (var compressedDataStream = new MemoryStream(compressedDataBytes))
+            {
+                using (var gZipStream = new GZipStream(compressedDataStream, CompressionMode.Decompress))
+                {
+                    using (var dataStream = new MemoryStream())
+                    {
+                        gZipStream.CopyTo(dataStream);
+                        return dataStream.ToArray();
+                    }
+                }
+            }
         }
     }
 }
