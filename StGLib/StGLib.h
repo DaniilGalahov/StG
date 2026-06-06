@@ -14,9 +14,11 @@ namespace StGLib
 		std::vector<uint8_t>& stegoImageBytes,
 
 		//in
-		const std::vector<uint8_t>& carrierImageBytes,
 		const std::vector<uint8_t>& dataBytes,
-		const std::vector<uint8_t>& passwordBytes
+		const std::vector<uint8_t>& carrierImageBytes,
+		const std::vector<uint8_t>& passwordBytes,
+		int blockSize = 8,
+		double treshold = 0.7
 	);
 
 	int Extract
@@ -26,6 +28,8 @@ namespace StGLib
 
 		//in
 		const std::vector<uint8_t>& stegoImageBytes,
-		const std::vector<uint8_t>& passwordBytes
+		const std::vector<uint8_t>& passwordBytes,
+		int blockSize = 8,
+		double treshold = 0.7
 	);
 }

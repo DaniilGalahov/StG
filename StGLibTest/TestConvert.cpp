@@ -5,14 +5,14 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace StGTest
+namespace StGLibTest
 {
 	TEST_CLASS(TestConvert)
 	{
 	public:
 		TEST_METHOD(TestToCVMat)
 		{
-			std::vector<uint8_t> bytes = LoadFromFile("..\\..\\files\\input.png");
+			std::vector<uint8_t> bytes = LoadFromFile(CARRIER_FILE_PATH);
 			cv::Mat expectedImage = cv::imdecode(bytes, cv::IMREAD_UNCHANGED);
 			cv::Mat actualImage = Convert::ToCVMat(bytes);
 			Assert::IsTrue(AreEqual(expectedImage, actualImage));
@@ -20,7 +20,7 @@ namespace StGTest
 
 		TEST_METHOD(TestImageToBytes)
 		{
-			cv::Mat image = cv::imread("..\\..\\files\\input.png");
+			cv::Mat image = cv::imread(CARRIER_FILE_PATH);
 			std::vector<uint8_t> expectedBytes;
 			std::vector<int> params;
 			params.push_back(cv::IMWRITE_PNG_COMPRESSION);

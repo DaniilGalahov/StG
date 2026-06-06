@@ -5,7 +5,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace StGTest
+namespace StGLibTest
 {
 	TEST_CLASS(TestStGLib)
 	{
@@ -17,23 +17,23 @@ namespace StGTest
 
 		TEST_METHOD(TestEmbed)
 		{
-			std::vector<uint8_t> carrierImageBytes = LoadFromFile("..\\..\\files\\input.png");
-			std::vector<uint8_t> dataBytes = LoadFromFile("..\\..\\files\\message.txt");
+			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
+			std::vector<uint8_t> dataBytes = LoadFromFile(DATA_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			std::vector<uint8_t> stegoImageBytes;
-			int result = StGLib::Embed(stegoImageBytes, carrierImageBytes, dataBytes, passwordBytes);
-			std::vector<uint8_t> expectedBytes = LoadFromFile("..\\..\\files\\output.png");
+			int result = StGLib::Embed(stegoImageBytes, dataBytes, carrierImageBytes, passwordBytes, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
+			std::vector<uint8_t> expectedBytes = LoadFromFile(STEGO_FILE_PATH);
 			Assert::AreEqual(result, 0);
 			Assert::IsTrue(stegoImageBytes == expectedBytes);
 		}
 
 		TEST_METHOD(TestExtract)
 		{
-			std::vector<uint8_t> stegoImageBytes = LoadFromFile("..\\..\\files\\output.png");
+			std::vector<uint8_t> stegoImageBytes = LoadFromFile(STEGO_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			std::vector<uint8_t> dataBytes;
-			int result = StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes);
-			std::vector<uint8_t> expectedBytes = LoadFromFile("..\\..\\files\\received.txt");
+			int result = StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
+			std::vector<uint8_t> expectedBytes = LoadFromFile(DATA_FILE_PATH);
 			Assert::AreEqual(result, 0);
 			Assert::IsTrue(dataBytes == expectedBytes);
 		}

@@ -6,15 +6,17 @@ int StGLib::Embed
 	std::vector<uint8_t>& stegoImageBytes,
 
 	//in
-	const std::vector<uint8_t>& carrierImageBytes,
 	const std::vector<uint8_t>& dataBytes,
-	const std::vector<uint8_t>& passwordBytes
+	const std::vector<uint8_t>& carrierImageBytes,
+	const std::vector<uint8_t>& passwordBytes,
+	int blockSize,
+	double treshold
 )
 {
 	cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
-	cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage);
+	cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, blockSize, treshold);
 	uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
-	if (effectiveVolume < dataBytes.size() * 8)
+	if (effectiveVolume < sizeof(size_t) + (dataBytes.size() * 8))
 	{
 		return -1;
 	}
@@ -31,11 +33,13 @@ int StGLib::Extract
 
 	//in
 	const std::vector<uint8_t>& stegoImageBytes,
-	const std::vector<uint8_t>& passwordBytes
+	const std::vector<uint8_t>& passwordBytes,
+	int blockSize,
+	double treshold
 )
 {
 	cv::Mat stegoImage = Convert::ToCVMat(stegoImageBytes);
-	cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(stegoImage);
+	cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(stegoImage, blockSize, treshold);
 	uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
 	std::vector<std::tuple<int, int>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, passwordBytes, effectiveVolume);
 	dataBytes = Functions::Extract(stegoImage, shuffledCoordinates);
