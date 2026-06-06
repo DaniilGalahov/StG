@@ -1,7 +1,7 @@
 #Example of usage StGABI.dll in Python (created with ChatGPT as co-programmer)
 import os
 import ctypes
-from ctypes import CDLL, POINTER, c_uint8, c_size_t, c_int, c_void_p, byref, string_at
+from ctypes import CDLL, POINTER, c_uint8, c_size_t, c_int, c_double, c_void_p, byref, string_at
 
 # Paths
 os.add_dll_directory(r"C:\opencv\build\x64\vc16\bin")
@@ -15,6 +15,7 @@ stgabi.Embed.argtypes = [
     POINTER(c_uint8), c_size_t,
     POINTER(c_uint8), c_size_t,
     POINTER(c_uint8), c_size_t,
+    c_int, c_double,
     POINTER(POINTER(c_uint8)), POINTER(c_size_t)
 ]
 stgabi.Embed.restype = c_int
@@ -22,12 +23,16 @@ stgabi.Embed.restype = c_int
 stgabi.Extract.argtypes = [
     POINTER(c_uint8), c_size_t,
     POINTER(c_uint8), c_size_t,
+    c_int, c_double,
     POINTER(POINTER(c_uint8)), POINTER(c_size_t)
 ]
 stgabi.Extract.restype = c_int
 
 stgabi.FreeMemory.argtypes = [c_void_p]
 stgabi.FreeMemory.restype = None
+
+embeddingBlockSize = 2 # 2 for small pictures (128x128), 8 for generic photos
+embeddingTreshold = 0.35 # for test purposes only! Use at least 0.5 for practical applications
 
 # Define helper functions
 def read_bytes(path):
@@ -53,9 +58,10 @@ def embed(data_path, carrier_path, password, stego_path):
 
     # Call C ABI function
     res = stgabi.Embed(
-        carrier_ptr, len(carrier_bytes),
         data_ptr, len(data_bytes),
+        carrier_ptr, len(carrier_bytes),
         password_ptr, len(password),
+        embeddingBlockSize, embeddingTreshold,
         byref(stego_ptr), byref(stego_size)
     )
     
@@ -88,6 +94,7 @@ def extract(stego_path, password, extracted_path):
     res = stgabi.Extract(
         stego_ptr, len(stego_bytes),
         password_ptr, len(password),
+        embeddingBlockSize, embeddingTreshold,
         byref(extracted_ptr), byref(extracted_size)
     )
 
@@ -107,10 +114,10 @@ def extract(stego_path, password, extracted_path):
 
 # Example usage
 files_dir = os.path.abspath(r"..\\files")
-data_path = os.path.join(files_dir, "message.txt")
-carrier_path = os.path.join(files_dir, "input.png")
-stego_path = os.path.join(files_dir, "output.png")
-extracted_path = os.path.join(files_dir, "received.txt")
+data_path = os.path.join(files_dir, "data.txt")
+carrier_path = os.path.join(files_dir, "carrier.png")
+stego_path = os.path.join(files_dir, "stego.png")
+extracted_path = os.path.join(files_dir, "extracted.txt")
 
 password = b"People are like water - they will always find a way."
 
