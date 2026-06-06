@@ -14,16 +14,16 @@ namespace StGBridge
 			cli::array<System::Byte>^ dataBytes,
 			cli::array<System::Byte>^ carrierImageBytes,
 			cli::array<System::Byte>^ passwordBytes,
-			int blockSize = 8,
-			double treshold = 0.7
+			int blockSize,
+			double treshold
 		);
 
 		static cli::array<System::Byte>^ Extract
 		(
 			cli::array<System::Byte>^ stegoImageBytes,
 			cli::array<System::Byte>^ passwordBytes,
-			int blockSize = 8,
-			double treshold = 0.7
+			int blockSize,
+			double treshold
 		);
 	};
 }
