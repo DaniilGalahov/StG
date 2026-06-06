@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using AESBridge;
+using StGBridge;
 
 namespace StG
 {
@@ -45,14 +46,14 @@ namespace StG
             return AESBridge.AESNative.Decrypt(encryptedData, password, mode);
         }
 
-        public static Byte[] Embed(Byte[] dataBytes, Byte[] carrierImageBytes, Byte[] passwordBytes)
+        public static Byte[] Embed(Byte[] dataBytes, Byte[] carrierImageBytes, Byte[] passwordBytes, int blockSize = 8, double treshold=0.7)
         {
-            return StGBridge.StGNative.Embed(carrierImageBytes, dataBytes, passwordBytes);
+            return StGBridge.StGNative.Embed(dataBytes, carrierImageBytes, passwordBytes, blockSize, treshold);
         }
 
-        public static Byte[] Extract(Byte[] stegoImageBytes, Byte[] passwordBytes)
+        public static Byte[] Extract(Byte[] stegoImageBytes, Byte[] passwordBytes, int blockSize = 8, double treshold = 0.7)
         {
-            return StGBridge.StGNative.Extract(stegoImageBytes, passwordBytes);
+            return StGBridge.StGNative.Extract(stegoImageBytes, passwordBytes, blockSize, treshold);
         }
     }
 }

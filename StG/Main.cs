@@ -1,5 +1,4 @@
 ﻿using AESBridge;
-using StGBridge;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,17 +11,20 @@ namespace StG
     public partial class Main : Form
     {
         private string passwordRegexPattern = $"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\da-zA-Z]).{{8,}}$";
+        private List<string> availableExtensions = new List<string> { ".png", ".bmp", ".jpg" };
 
         public Main()
         {
             InitializeComponent();
             toolTip.SetToolTip(textBox_Embed_DataFilePath, "Path to file with data-to-hide");
+            toolTip.SetToolTip(textBox_Embed_EncryptionPassword, "At least 8 symbols with string and capital letters, digits and special characters. \nShould not be same as stego password.");
             toolTip.SetToolTip(textBox_Embed_CarrierFilePath, "Path to .png image file in which you want to hide data");
-            toolTip.SetToolTip(textBox_Embed_EncryptionPassword, "At least 8 symbols with string and capital letters, digits and special characters");
+            toolTip.SetToolTip(textBox_Embed_StegoPassword, "At least 8 symbols with string and capital letters, digits and special characters. \nShould not be same as encryption password.");
             toolTip.SetToolTip(textBox_Embed_StegoFilePath, "Path to result .png image file");
 
             toolTip.SetToolTip(textBox_Extract_StegoFilePath, "Path to .png image file containing hidden data");
-            toolTip.SetToolTip(textBox_Extract_Password, "Same password you used on embedding");
+            toolTip.SetToolTip(textBox_Extract_StegoPassword, "Stego password you used on embedding");
+            toolTip.SetToolTip(textBox_Extract_EncryptionPassword, "Encryption password you used on embedding");
             toolTip.SetToolTip(textBox_Extract_DataFilePath, "Path to result file with extracted data");
         }
 
@@ -104,18 +106,20 @@ namespace StG
             
             textBox_Embed_DataFilePath.Enabled = value;
             button_Embed_SelectDataFile.Enabled = value;
+            comboBox_Embed_EncryptionMode.Enabled = value;
+            textBox_Embed_EncryptionPassword.Enabled = value;
             textBox_Embed_CarrierFilePath.Enabled = value;
             button_Embed_SelectCarrierFile.Enabled = value;
-            textBox_Embed_EncryptionPassword.Enabled = value;
-            comboBox_Embed_EncryptionMode.Enabled = value;
+            textBox_Embed_StegoPassword.Enabled = value;
             textBox_Embed_StegoFilePath.Enabled = value;
             button_Embed_CreateStegoFile.Enabled = value;
             buttonEmbed.Enabled = value;
 
             textBox_Extract_StegoFilePath.Enabled = value;
             button_Extract_SelectStegoFile.Enabled = value;
-            textBox_Extract_Password.Enabled = value;
+            textBox_Extract_StegoPassword.Enabled = value;
             comboBox_Extract_EncryptionMode.Enabled = value;
+            textBox_Extract_EncryptionPassword.Enabled = value;
             textBox_Extract_StegoFilePath.Enabled = value;
             button_Extract_CreateDataFile.Enabled = value;
             buttonExtract.Enabled = value;
@@ -149,29 +153,35 @@ namespace StG
                 return false;
             }
 
-            if(!File.Exists(textBox_Embed_CarrierFilePath.Text))
-            {
-                SetEmbedStatus("Carrier image file does not exist");
-                return false;
-            }
-
-            if (Path.GetExtension(textBox_Embed_CarrierFilePath.Text)!=".png")
-            {
-                SetEmbedStatus("Carrier image file extension incorrect");
-                return false;
-            }
-
-            if (!Regex.IsMatch(textBox_Embed_EncryptionPassword.Text, passwordRegexPattern))
-            {
-                SetEmbedStatus("Password too weak");
-                return false;
-            }
-
             if((Mode)comboBox_Embed_EncryptionMode.SelectedIndex != Mode.AES128 
             && (Mode)comboBox_Embed_EncryptionMode.SelectedIndex != Mode.AES192
             && (Mode)comboBox_Embed_EncryptionMode.SelectedIndex != Mode.AES256)
             {
                 SetEmbedStatus("Encryption mode incorrect");
+                return false;
+            }
+
+            if (!Regex.IsMatch(textBox_Embed_EncryptionPassword.Text, passwordRegexPattern))
+            {
+                SetEmbedStatus("Encryption password too weak");
+                return false;
+            }
+
+            if (!File.Exists(textBox_Embed_CarrierFilePath.Text))
+            {
+                SetEmbedStatus("Carrier image file does not exist");
+                return false;
+            }
+
+            if (!availableExtensions.Contains(Path.GetExtension(textBox_Embed_CarrierFilePath.Text)))
+            {
+                SetEmbedStatus("Carrier image file extension incorrect");
+                return false;
+            }
+
+            if (!Regex.IsMatch(textBox_Embed_StegoPassword.Text, passwordRegexPattern))
+            {
+                SetEmbedStatus("Stego password too weak");
                 return false;
             }
 
@@ -200,9 +210,9 @@ namespace StG
                 return false;
             }
 
-            if (!Regex.IsMatch(textBox_Extract_Password.Text, passwordRegexPattern))
+            if (!Regex.IsMatch(textBox_Extract_StegoPassword.Text, passwordRegexPattern))
             {
-                SetExtractStatus("Password format incorrect");
+                SetExtractStatus("Stego password format incorrect");
                 return false;
             }
 
@@ -211,6 +221,12 @@ namespace StG
             && (Mode)comboBox_Extract_EncryptionMode.SelectedIndex != Mode.AES256)
             {
                 SetExtractStatus("Encryption mode incorrect");
+                return false;
+            }
+
+            if (!Regex.IsMatch(textBox_Extract_EncryptionPassword.Text, passwordRegexPattern))
+            {
+                SetExtractStatus("Encryption password format incorrect");
                 return false;
             }
 
@@ -235,24 +251,33 @@ namespace StG
 
                 SetEmbedStatus("Embedding data");
 
-                Byte[] data = File.ReadAllBytes(textBox_Embed_DataFilePath.Text);
-                Byte[] password = Encoding.UTF8.GetBytes(textBox_Embed_EncryptionPassword.Text);
-                Mode mode = (Mode)comboBox_Embed_EncryptionMode.SelectedIndex;
-                Byte[] encryptedData = AESBridge.AESNative.Encrypt(data, password, mode);
-
-                Byte[] carrier = File.ReadAllBytes(textBox_Embed_CarrierFilePath.Text);
-
                 try
                 {
-                    Byte[] stego = StGBridge.StGNative.Embed(carrier, encryptedData, password);
-                    File.WriteAllBytes(textBox_Embed_StegoFilePath.Text, stego);
+                    DataProcessor.Embed
+                    (
+                        dataFilePath: textBox_Embed_DataFilePath.Text,
+
+                        compress: true,
+
+                        encrypt: true,
+                        encryptionMode: comboBox_Embed_EncryptionMode.SelectedIndex,
+                        encryptionPassword: textBox_Embed_EncryptionPassword.Text,
+
+                        useEncryptionPasswordForStego: false,
+
+                        carrierImageFilePath: textBox_Embed_CarrierFilePath.Text,
+                        stegoPassword: textBox_Embed_StegoPassword.Text,
+                        blockSize: 8,
+                        treshold: 0.7,
+
+                        stegoImageFilePath: textBox_Embed_StegoFilePath.Text
+                    );
                     SetEmbedStatus("Ready");
                 }
                 catch (Exception ex)
                 {
                     SetEmbedStatus(ex.Message);
                 }
-
                 EnableControls();
             }
         }
@@ -267,14 +292,24 @@ namespace StG
 
                 SetExtractStatus("Extracting data");
 
-                Byte[] stego = File.ReadAllBytes(textBox_Extract_StegoFilePath.Text);
-                Byte[] password = Encoding.UTF8.GetBytes(textBox_Extract_Password.Text);
-                Byte[] encryptedData = StGBridge.StGNative.Extract(stego, password);
-                Byte[] data = AESBridge.AESNative.Decrypt(encryptedData, password, (Mode)comboBox_Extract_EncryptionMode.SelectedIndex);
-                File.WriteAllBytes(textBox_Extract_DataFilePath.Text, data);
+                DataProcessor.Extract
+                (
+                    stegoImageFilePath: textBox_Extract_StegoFilePath.Text,
+                    stegoPassword: textBox_Extract_StegoPassword.Text,
+                    blockSize: 8,
+                    treshold: 0.7,
+                    
+                    useStegoPasswordForEncryption: false,
+                    
+                    encrypted: true,
+                    encryptionMode: comboBox_Extract_EncryptionMode.SelectedIndex,
+                    encryptionPassword: textBox_Extract_EncryptionPassword.Text,
+                    
+                    compressed: true,
+                    dataFilePath: textBox_Extract_DataFilePath.Text
+                );
 
                 SetExtractStatus("Ready");
-
                 EnableControls();
             }
         }
@@ -293,21 +328,6 @@ namespace StG
             catch (Exception ex)
             {
                 MessageBox.Show("Cannot open link. " + ex.Message);
-            }
-        }
-
-        private void checkBox_Embed_EncryptData_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!checkBox_Embed_EncryptData.Checked)
-            {
-                comboBox_Embed_EncryptionMode.Enabled = true;
-                textBox_Embed_EncryptionPassword.Enabled = true;
-                textBox_Embed_EncryptionPassword.Text = "";
-            }
-            else
-            {
-                comboBox_Embed_EncryptionMode.Enabled = true;
-                textBox_Embed_EncryptionPassword.Enabled = true;
             }
         }
     }
