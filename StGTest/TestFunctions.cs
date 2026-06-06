@@ -8,7 +8,7 @@ using StG;
 namespace StGTest
 {
     [TestClass]
-    public class TestDataProcessor
+    public class TestFunctions
     {
         const string PASSWORD = "People are like water - they will always find a way.";
 
@@ -22,7 +22,7 @@ namespace StGTest
         public void TestCompress()
         {
             Byte[] dataBytes = File.ReadAllBytes("..\\..\\..\\files\\message.txt");
-            Byte[] compressedDataBytes = DataProcessor.Compress(dataBytes);
+            Byte[] compressedDataBytes = Functions.Compress(dataBytes);
             Assert.IsTrue(compressedDataBytes.Length < dataBytes.Length);
         }
 
@@ -30,8 +30,8 @@ namespace StGTest
         public void TestDecompress()
         {
             Byte[] dataBytes = File.ReadAllBytes("..\\..\\..\\files\\message.txt");
-            Byte[] compressedDataBytes = DataProcessor.Compress(dataBytes);
-            Byte[] resultBytes = DataProcessor.Decompress(compressedDataBytes);
+            Byte[] compressedDataBytes = Functions.Compress(dataBytes);
+            Byte[] resultBytes = Functions.Decompress(compressedDataBytes);
             Assert.AreEqual(dataBytes.Length, resultBytes.Length);
             Random random = new Random();
             int randomIdx = random.Next(0, dataBytes.Length);
@@ -44,7 +44,7 @@ namespace StGTest
             Byte[] data = File.ReadAllBytes("..\\..\\..\\files\\message.txt");
             Byte[] password = Encoding.UTF8.GetBytes(PASSWORD);
             AESBridge.Mode mode = AESBridge.Mode.AES256;
-            Byte[] encryptedData = DataProcessor.Encrypt(data, password, mode);
+            Byte[] encryptedData = Functions.Encrypt(data, password, mode);
             MD5 md5 = MD5.Create();
             string hashData = BitConverter.ToString(md5.ComputeHash(data));
             string hashEncryptedData = BitConverter.ToString(md5.ComputeHash(encryptedData));
@@ -57,8 +57,8 @@ namespace StGTest
             Byte[] data = File.ReadAllBytes("..\\..\\..\\files\\message.txt");
             Byte[] password = Encoding.UTF8.GetBytes(PASSWORD);
             AESBridge.Mode mode = AESBridge.Mode.AES256;
-            Byte[] encryptedData = DataProcessor.Encrypt(data, password, mode);
-            Byte[] resultData = DataProcessor.Decrypt(encryptedData, password, mode);
+            Byte[] encryptedData = Functions.Encrypt(data, password, mode);
+            Byte[] resultData = Functions.Decrypt(encryptedData, password, mode);
             MD5 md5 = MD5.Create();
             string hashData = BitConverter.ToString(md5.ComputeHash(data));
             string hashResultData = BitConverter.ToString(md5.ComputeHash(resultData));
@@ -71,7 +71,7 @@ namespace StGTest
             Byte[] dataBytes = File.ReadAllBytes("..\\..\\..\\files\\message.txt");
             Byte[] carrierImageBytes = File.ReadAllBytes("..\\..\\..\\files\\input.png");
             Byte[] passwordBytes = Encoding.UTF8.GetBytes(PASSWORD);
-            Byte[] stegoImageBytes = DataProcessor.Embed(dataBytes, carrierImageBytes, passwordBytes);
+            Byte[] stegoImageBytes = Functions.Embed(dataBytes, carrierImageBytes, passwordBytes);
             Byte[] expectedBytes = File.ReadAllBytes("..\\..\\..\\files\\output.png");
             Assert.AreEqual(expectedBytes.Length, stegoImageBytes.Length);
             Random random = new Random();
@@ -84,7 +84,7 @@ namespace StGTest
         {
             Byte[] stegoImageBytes = File.ReadAllBytes("..\\..\\..\\files\\output.png");
             Byte[] passwordBytes = Encoding.UTF8.GetBytes(PASSWORD);
-            Byte[] dataBytes = DataProcessor.Extract(stegoImageBytes, passwordBytes);
+            Byte[] dataBytes = Functions.Extract(stegoImageBytes, passwordBytes);
             Byte[] expectedBytes = File.ReadAllBytes("..\\..\\..\\files\\message.txt");
             Assert.AreEqual(expectedBytes.Length, dataBytes.Length);
             Random random = new Random();

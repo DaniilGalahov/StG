@@ -2,11 +2,10 @@
 using System.IO;
 using System.IO.Compression;
 using AESBridge;
-using StGBridge;
 
 namespace StG
 {
-    public static class DataProcessor
+    public static class Functions
     {
         public static Byte[] Compress(Byte[] dataBytes)
         {
