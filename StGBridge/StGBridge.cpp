@@ -28,9 +28,11 @@ namespace
 
 cli::array<System::Byte>^ StGBridge::StGNative::Embed
 (
-	cli::array<System::Byte>^ carrierImageBytes,
 	cli::array<System::Byte>^ dataBytes,
-	cli::array<System::Byte>^ passwordBytes
+	cli::array<System::Byte>^ carrierImageBytes,
+	cli::array<System::Byte>^ passwordBytes,
+	int blockSize,
+	double treshold
 )
 {
 	try
@@ -39,7 +41,7 @@ cli::array<System::Byte>^ StGBridge::StGNative::Embed
 		std::vector<uint8_t> nativeDataBytes = ToNative(dataBytes);
 		std::vector<uint8_t> nativePasswordBytes = ToNative(passwordBytes);
 		std::vector<uint8_t> nativeStegoImageBytes;
-		int result = StGLib::Embed(nativeStegoImageBytes, nativeCarrierImageBytes, nativeDataBytes, nativePasswordBytes);
+		int result = StGLib::Embed(nativeStegoImageBytes, nativeDataBytes, nativeCarrierImageBytes, nativePasswordBytes, blockSize, treshold);
 
 		if (result != 0)
 		{
@@ -60,7 +62,9 @@ cli::array<System::Byte>^ StGBridge::StGNative::Embed
 cli::array<System::Byte>^ StGBridge::StGNative::Extract
 (
 	cli::array<System::Byte>^ stegoImageBytes,
-	cli::array<System::Byte>^ passwordBytes
+	cli::array<System::Byte>^ passwordBytes,
+	int blockSize,
+	double treshold
 )
 {
 	try
@@ -69,7 +73,7 @@ cli::array<System::Byte>^ StGBridge::StGNative::Extract
 
 		std::vector<uint8_t> nativeStegoImageBytes = ToNative(stegoImageBytes);
 		std::vector<uint8_t> nativePasswordBytes = ToNative(passwordBytes);
-		int result = StGLib::Extract(nativeDataBytes, nativeStegoImageBytes, nativePasswordBytes);
+		int result = StGLib::Extract(nativeDataBytes, nativeStegoImageBytes, nativePasswordBytes, blockSize, treshold);
 
 		if (result != 0)
 		{

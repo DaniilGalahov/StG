@@ -11,15 +11,19 @@ namespace StGBridge
 	public:
 		static cli::array<System::Byte>^ Embed
 		(
-			cli::array<System::Byte>^ carrierImageBytes,
 			cli::array<System::Byte>^ dataBytes,
-			cli::array<System::Byte>^ passwordBytes
+			cli::array<System::Byte>^ carrierImageBytes,
+			cli::array<System::Byte>^ passwordBytes,
+			int blockSize = 8,
+			double treshold = 0.7
 		);
 
 		static cli::array<System::Byte>^ Extract
 		(
 			cli::array<System::Byte>^ stegoImageBytes,
-			cli::array<System::Byte>^ passwordBytes
+			cli::array<System::Byte>^ passwordBytes,
+			int blockSize = 8,
+			double treshold = 0.7
 		);
 	};
 }

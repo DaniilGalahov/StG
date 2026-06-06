@@ -2,14 +2,17 @@
 
 int Embed
 (
-	const uint8_t* carrierImageBytes,
-	size_t carrierImageSize,
-
 	const uint8_t* dataBytes,
 	size_t dataSize,
 
+	const uint8_t* carrierImageBytes,
+	size_t carrierImageSize,
+
 	const uint8_t* passwordBytes,
 	size_t passwordSize,
+
+	int32_t blockSize,
+	double_t treshold,
 
 	uint8_t** stegoImageBytes,
 	size_t* stegoImageSize
@@ -33,7 +36,7 @@ int Embed
 		std::vector<uint8_t> dataVector(dataBytes, dataBytes + dataSize);
 		std::vector<uint8_t> passwordVector(passwordBytes, passwordBytes + passwordSize);
 		std::vector<uint8_t> stegoVector;
-		int result = StGLib::Embed(stegoVector, carrierVector, dataVector, passwordVector);
+		int result = StGLib::Embed(stegoVector, dataVector, carrierVector, passwordVector, blockSize, treshold);
 		*stegoImageSize = stegoVector.size();
 		*stegoImageBytes = new uint8_t[*stegoImageSize];
 		std::memcpy(*stegoImageBytes, stegoVector.data(), *stegoImageSize);
@@ -61,6 +64,9 @@ int Extract
 	const uint8_t* passwordBytes,
 	size_t passwordSize,
 
+	int32_t blockSize,
+	double_t treshold,
+
 	uint8_t** dataBytes,
 	size_t* dataSize
 )
@@ -81,7 +87,7 @@ int Extract
 		std::vector<uint8_t> stegoVector(stegoImageBytes, stegoImageBytes + stegoImageSize);
 		std::vector<uint8_t> passwordVector(passwordBytes, passwordBytes + passwordSize);
 		std::vector<uint8_t> extractedVector;
-		int result = StGLib::Extract(extractedVector, stegoVector, passwordVector);
+		int result = StGLib::Extract(extractedVector, stegoVector, passwordVector, blockSize, treshold);
 		*dataSize = extractedVector.size();
 		*dataBytes = new uint8_t[*dataSize];
 		std::memcpy(*dataBytes, extractedVector.data(), *dataSize);
