@@ -45,5 +45,15 @@ namespace StG
         {
             return AESBridge.AESNative.Decrypt(encryptedData, password, mode);
         }
+
+        public static Byte[] Embed(Byte[] dataBytes, Byte[] carrierImageBytes, Byte[] passwordBytes)
+        {
+            return StGBridge.StGNative.Embed(carrierImageBytes, dataBytes, passwordBytes);
+        }
+
+        public static Byte[] Extract(Byte[] stegoImageBytes, Byte[] passwordBytes)
+        {
+            return StGBridge.StGNative.Extract(stegoImageBytes, passwordBytes);
+        }
     }
 }
