@@ -6,7 +6,7 @@ using namespace System;
 
 namespace StGBridge
 {
-	public ref class StG sealed
+	public ref class StGNative sealed
 	{
 	public:
 		static cli::array<System::Byte>^ Embed

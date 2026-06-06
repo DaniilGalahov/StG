@@ -238,13 +238,13 @@ namespace StG
                 Byte[] data = File.ReadAllBytes(textBox_Embed_DataFilePath.Text);
                 Byte[] password = Encoding.UTF8.GetBytes(textBox_Embed_EncryptionPassword.Text);
                 Mode mode = (Mode)comboBox_Embed_EncryptionMode.SelectedIndex;
-                Byte[] encryptedData = AESBridge.AES.Encrypt(data, password, mode);
+                Byte[] encryptedData = AESBridge.AESNative.Encrypt(data, password, mode);
 
                 Byte[] carrier = File.ReadAllBytes(textBox_Embed_CarrierFilePath.Text);
 
                 try
                 {
-                    Byte[] stego = StGBridge.StG.Embed(carrier, encryptedData, password);
+                    Byte[] stego = StGBridge.StGNative.Embed(carrier, encryptedData, password);
                     File.WriteAllBytes(textBox_Embed_StegoFilePath.Text, stego);
                     SetEmbedStatus("Ready");
                 }
@@ -269,8 +269,8 @@ namespace StG
 
                 Byte[] stego = File.ReadAllBytes(textBox_Extract_StegoFilePath.Text);
                 Byte[] password = Encoding.UTF8.GetBytes(textBox_Extract_Password.Text);
-                Byte[] encryptedData = StGBridge.StG.Extract(stego, password);
-                Byte[] data = AESBridge.AES.Decrypt(encryptedData, password, (Mode)comboBox_Extract_EncryptionMode.SelectedIndex);
+                Byte[] encryptedData = StGBridge.StGNative.Extract(stego, password);
+                Byte[] data = AESBridge.AESNative.Decrypt(encryptedData, password, (Mode)comboBox_Extract_EncryptionMode.SelectedIndex);
                 File.WriteAllBytes(textBox_Extract_DataFilePath.Text, data);
 
                 SetExtractStatus("Ready");

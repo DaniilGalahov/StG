@@ -26,7 +26,7 @@ namespace
     }
 }
 
-cli::array<System::Byte>^ StGBridge::StG::Embed
+cli::array<System::Byte>^ StGBridge::StGNative::Embed
 (
 	cli::array<System::Byte>^ carrierImageBytes,
 	cli::array<System::Byte>^ dataBytes,
@@ -57,7 +57,7 @@ cli::array<System::Byte>^ StGBridge::StG::Embed
 	}
 }
 
-cli::array<System::Byte>^ StGBridge::StG::Extract
+cli::array<System::Byte>^ StGBridge::StGNative::Extract
 (
 	cli::array<System::Byte>^ stegoImageBytes,
 	cli::array<System::Byte>^ passwordBytes
