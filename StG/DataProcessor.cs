@@ -35,5 +35,15 @@ namespace StG
                 }
             }
         }
+
+        public static Byte[] Encrypt(Byte[] data, Byte[] password, Mode mode)
+        {
+            return AESBridge.AESNative.Encrypt(data, password, mode);
+        }
+
+        public static Byte[] Decrypt(Byte[] encryptedData, Byte[] password, Mode mode)
+        {
+            return AESBridge.AESNative.Decrypt(encryptedData, password, mode);
+        }
     }
 }

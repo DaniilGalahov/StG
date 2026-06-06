@@ -57,6 +57,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AES\AESBridge\AESBridge.vcxproj">
+      <Project>{4af3f195-d9f6-d3ea-b636-b971b1f8d5ee}</Project>
+      <Name>AESBridge</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StG\StG.csproj">
       <Project>{2df5c212-1120-4b43-a64b-78164f43eb82}</Project>
       <Name>StG</Name>
