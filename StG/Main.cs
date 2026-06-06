@@ -18,7 +18,7 @@ namespace StG
             InitializeComponent();
             toolTip.SetToolTip(textBox_Embed_DataFilePath, "Path to file with data-to-hide");
             toolTip.SetToolTip(textBox_Embed_CarrierFilePath, "Path to .png image file in which you want to hide data");
-            toolTip.SetToolTip(textBox_Embed_Password, "At least 8 symbols with string and capital letters, digits and special characters");
+            toolTip.SetToolTip(textBox_Embed_EncryptionPassword, "At least 8 symbols with string and capital letters, digits and special characters");
             toolTip.SetToolTip(textBox_Embed_StegoFilePath, "Path to result .png image file");
 
             toolTip.SetToolTip(textBox_Extract_StegoFilePath, "Path to .png image file containing hidden data");
@@ -106,7 +106,7 @@ namespace StG
             button_Embed_SelectDataFile.Enabled = value;
             textBox_Embed_CarrierFilePath.Enabled = value;
             button_Embed_SelectCarrierFile.Enabled = value;
-            textBox_Embed_Password.Enabled = value;
+            textBox_Embed_EncryptionPassword.Enabled = value;
             comboBox_Embed_EncryptionMode.Enabled = value;
             textBox_Embed_StegoFilePath.Enabled = value;
             button_Embed_CreateStegoFile.Enabled = value;
@@ -161,7 +161,7 @@ namespace StG
                 return false;
             }
 
-            if (!Regex.IsMatch(textBox_Embed_Password.Text, passwordRegexPattern))
+            if (!Regex.IsMatch(textBox_Embed_EncryptionPassword.Text, passwordRegexPattern))
             {
                 SetEmbedStatus("Password too weak");
                 return false;
@@ -236,7 +236,7 @@ namespace StG
                 SetEmbedStatus("Embedding data");
 
                 Byte[] data = File.ReadAllBytes(textBox_Embed_DataFilePath.Text);
-                Byte[] password = Encoding.UTF8.GetBytes(textBox_Embed_Password.Text);
+                Byte[] password = Encoding.UTF8.GetBytes(textBox_Embed_EncryptionPassword.Text);
                 Mode mode = (Mode)comboBox_Embed_EncryptionMode.SelectedIndex;
                 Byte[] encryptedData = AESBridge.AES.Encrypt(data, password, mode);
 
@@ -293,6 +293,21 @@ namespace StG
             catch (Exception ex)
             {
                 MessageBox.Show("Cannot open link. " + ex.Message);
+            }
+        }
+
+        private void checkBox_Embed_EncryptData_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!checkBox_Embed_EncryptData.Checked)
+            {
+                comboBox_Embed_EncryptionMode.Enabled = true;
+                textBox_Embed_EncryptionPassword.Enabled = true;
+                textBox_Embed_EncryptionPassword.Text = "";
+            }
+            else
+            {
+                comboBox_Embed_EncryptionMode.Enabled = true;
+                textBox_Embed_EncryptionPassword.Enabled = true;
             }
         }
     }

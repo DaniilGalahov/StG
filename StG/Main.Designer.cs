@@ -40,7 +40,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox_Embed_EncryptionMode = new System.Windows.Forms.ComboBox();
-            this.textBox_Embed_Password = new System.Windows.Forms.TextBox();
+            this.textBox_Embed_EncryptionPassword = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.button_Embed_SelectCarrierFile = new System.Windows.Forms.Button();
             this.textBox_Embed_CarrierFilePath = new System.Windows.Forms.TextBox();
@@ -70,6 +70,11 @@
             this.openFileDialog_SelectStegoFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog_CreateDataFile = new System.Windows.Forms.SaveFileDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.checkBox_Embed_CompressData = new System.Windows.Forms.CheckBox();
+            this.checkBox_Embed_EncryptData = new System.Windows.Forms.CheckBox();
+            this.checkBox_Embed_UseEncryptionPasswordForStego = new System.Windows.Forms.CheckBox();
+            this.textBox_Embed_StegoPassword = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabMode.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -82,11 +87,16 @@
             this.tabMode.Location = new System.Drawing.Point(2, 2);
             this.tabMode.Name = "tabMode";
             this.tabMode.SelectedIndex = 0;
-            this.tabMode.Size = new System.Drawing.Size(600, 300);
+            this.tabMode.Size = new System.Drawing.Size(600, 400);
             this.tabMode.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.textBox_Embed_StegoPassword);
+            this.tabPage1.Controls.Add(this.label7);
+            this.tabPage1.Controls.Add(this.checkBox_Embed_UseEncryptionPasswordForStego);
+            this.tabPage1.Controls.Add(this.checkBox_Embed_EncryptData);
+            this.tabPage1.Controls.Add(this.checkBox_Embed_CompressData);
             this.tabPage1.Controls.Add(this.linkLabel_Embed_Help);
             this.tabPage1.Controls.Add(this.label_Embed_Status);
             this.tabPage1.Controls.Add(this.buttonEmbed);
@@ -95,7 +105,7 @@
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.label5);
             this.tabPage1.Controls.Add(this.comboBox_Embed_EncryptionMode);
-            this.tabPage1.Controls.Add(this.textBox_Embed_Password);
+            this.tabPage1.Controls.Add(this.textBox_Embed_EncryptionPassword);
             this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.button_Embed_SelectCarrierFile);
             this.tabPage1.Controls.Add(this.textBox_Embed_CarrierFilePath);
@@ -107,7 +117,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(592, 274);
+            this.tabPage1.Size = new System.Drawing.Size(592, 374);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Embed";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -115,7 +125,7 @@
             // linkLabel_Embed_Help
             // 
             this.linkLabel_Embed_Help.AutoSize = true;
-            this.linkLabel_Embed_Help.Location = new System.Drawing.Point(541, 255);
+            this.linkLabel_Embed_Help.Location = new System.Drawing.Point(538, 358);
             this.linkLabel_Embed_Help.Name = "linkLabel_Embed_Help";
             this.linkLabel_Embed_Help.Size = new System.Drawing.Size(29, 13);
             this.linkLabel_Embed_Help.TabIndex = 16;
@@ -126,7 +136,7 @@
             // label_Embed_Status
             // 
             this.label_Embed_Status.AutoSize = true;
-            this.label_Embed_Status.Location = new System.Drawing.Point(9, 255);
+            this.label_Embed_Status.Location = new System.Drawing.Point(6, 358);
             this.label_Embed_Status.Name = "label_Embed_Status";
             this.label_Embed_Status.Size = new System.Drawing.Size(79, 13);
             this.label_Embed_Status.TabIndex = 15;
@@ -135,7 +145,7 @@
             // buttonEmbed
             // 
             this.buttonEmbed.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.buttonEmbed.Location = new System.Drawing.Point(268, 210);
+            this.buttonEmbed.Location = new System.Drawing.Point(268, 316);
             this.buttonEmbed.Name = "buttonEmbed";
             this.buttonEmbed.Size = new System.Drawing.Size(75, 23);
             this.buttonEmbed.TabIndex = 14;
@@ -145,7 +155,7 @@
             // 
             // button_Embed_CreateStegoFile
             // 
-            this.button_Embed_CreateStegoFile.Location = new System.Drawing.Point(495, 168);
+            this.button_Embed_CreateStegoFile.Location = new System.Drawing.Point(495, 274);
             this.button_Embed_CreateStegoFile.Name = "button_Embed_CreateStegoFile";
             this.button_Embed_CreateStegoFile.Size = new System.Drawing.Size(75, 23);
             this.button_Embed_CreateStegoFile.TabIndex = 13;
@@ -155,7 +165,7 @@
             // 
             // textBox_Embed_StegoFilePath
             // 
-            this.textBox_Embed_StegoFilePath.Location = new System.Drawing.Point(9, 170);
+            this.textBox_Embed_StegoFilePath.Location = new System.Drawing.Point(9, 276);
             this.textBox_Embed_StegoFilePath.Name = "textBox_Embed_StegoFilePath";
             this.textBox_Embed_StegoFilePath.Size = new System.Drawing.Size(480, 20);
             this.textBox_Embed_StegoFilePath.TabIndex = 12;
@@ -163,7 +173,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 154);
+            this.label6.Location = new System.Drawing.Point(6, 260);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(85, 13);
             this.label6.TabIndex = 11;
@@ -172,7 +182,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(446, 115);
+            this.label5.Location = new System.Drawing.Point(6, 119);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(89, 13);
             this.label5.TabIndex = 10;
@@ -185,32 +195,32 @@
             "AES-128",
             "AES-192",
             "AES-256"});
-            this.comboBox_Embed_EncryptionMode.Location = new System.Drawing.Point(449, 130);
+            this.comboBox_Embed_EncryptionMode.Location = new System.Drawing.Point(9, 134);
             this.comboBox_Embed_EncryptionMode.Name = "comboBox_Embed_EncryptionMode";
             this.comboBox_Embed_EncryptionMode.Size = new System.Drawing.Size(121, 21);
             this.comboBox_Embed_EncryptionMode.TabIndex = 9;
-            this.comboBox_Embed_EncryptionMode.Text = "AES-128";
+            this.comboBox_Embed_EncryptionMode.Text = "AES-256";
             // 
-            // textBox_Embed_Password
+            // textBox_Embed_EncryptionPassword
             // 
-            this.textBox_Embed_Password.Location = new System.Drawing.Point(9, 131);
-            this.textBox_Embed_Password.Name = "textBox_Embed_Password";
-            this.textBox_Embed_Password.Size = new System.Drawing.Size(434, 20);
-            this.textBox_Embed_Password.TabIndex = 8;
-            this.textBox_Embed_Password.UseSystemPasswordChar = true;
+            this.textBox_Embed_EncryptionPassword.Location = new System.Drawing.Point(136, 134);
+            this.textBox_Embed_EncryptionPassword.Name = "textBox_Embed_EncryptionPassword";
+            this.textBox_Embed_EncryptionPassword.Size = new System.Drawing.Size(434, 20);
+            this.textBox_Embed_EncryptionPassword.TabIndex = 8;
+            this.textBox_Embed_EncryptionPassword.UseSystemPasswordChar = true;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 115);
+            this.label4.Location = new System.Drawing.Point(133, 118);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.Size = new System.Drawing.Size(108, 13);
             this.label4.TabIndex = 7;
-            this.label4.Text = "Password:";
+            this.label4.Text = "Encryption password:";
             // 
             // button_Embed_SelectCarrierFile
             // 
-            this.button_Embed_SelectCarrierFile.Location = new System.Drawing.Point(495, 90);
+            this.button_Embed_SelectCarrierFile.Location = new System.Drawing.Point(495, 172);
             this.button_Embed_SelectCarrierFile.Name = "button_Embed_SelectCarrierFile";
             this.button_Embed_SelectCarrierFile.Size = new System.Drawing.Size(75, 23);
             this.button_Embed_SelectCarrierFile.TabIndex = 6;
@@ -220,7 +230,7 @@
             // 
             // textBox_Embed_CarrierFilePath
             // 
-            this.textBox_Embed_CarrierFilePath.Location = new System.Drawing.Point(9, 92);
+            this.textBox_Embed_CarrierFilePath.Location = new System.Drawing.Point(9, 174);
             this.textBox_Embed_CarrierFilePath.Name = "textBox_Embed_CarrierFilePath";
             this.textBox_Embed_CarrierFilePath.Size = new System.Drawing.Size(480, 20);
             this.textBox_Embed_CarrierFilePath.TabIndex = 5;
@@ -228,7 +238,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 76);
+            this.label3.Location = new System.Drawing.Point(6, 158);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(87, 13);
             this.label3.TabIndex = 4;
@@ -432,7 +442,7 @@
             // 
             // openFileDialog_SelectCarrierFile
             // 
-            this.openFileDialog_SelectCarrierFile.Filter = "PNG images (*.png)|*.png";
+            this.openFileDialog_SelectCarrierFile.Filter = "Supported image formats|*.png;*.bmp;*.jpg";
             this.openFileDialog_SelectCarrierFile.Title = "Select carrier image file";
             // 
             // saveFileDialog_CreateStegoFile
@@ -450,11 +460,63 @@
             // 
             this.saveFileDialog_CreateDataFile.Title = "Save data to file";
             // 
+            // checkBox_Embed_CompressData
+            // 
+            this.checkBox_Embed_CompressData.AutoSize = true;
+            this.checkBox_Embed_CompressData.Checked = true;
+            this.checkBox_Embed_CompressData.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_Embed_CompressData.Location = new System.Drawing.Point(9, 75);
+            this.checkBox_Embed_CompressData.Name = "checkBox_Embed_CompressData";
+            this.checkBox_Embed_CompressData.Size = new System.Drawing.Size(96, 17);
+            this.checkBox_Embed_CompressData.TabIndex = 18;
+            this.checkBox_Embed_CompressData.Text = "Compress data";
+            this.checkBox_Embed_CompressData.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_Embed_EncryptData
+            // 
+            this.checkBox_Embed_EncryptData.AutoSize = true;
+            this.checkBox_Embed_EncryptData.Checked = true;
+            this.checkBox_Embed_EncryptData.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_Embed_EncryptData.Location = new System.Drawing.Point(9, 99);
+            this.checkBox_Embed_EncryptData.Name = "checkBox_Embed_EncryptData";
+            this.checkBox_Embed_EncryptData.Size = new System.Drawing.Size(86, 17);
+            this.checkBox_Embed_EncryptData.TabIndex = 19;
+            this.checkBox_Embed_EncryptData.Text = "Encrypt data";
+            this.checkBox_Embed_EncryptData.UseVisualStyleBackColor = true;
+            this.checkBox_Embed_EncryptData.CheckedChanged += new System.EventHandler(this.checkBox_Embed_EncryptData_CheckedChanged);
+            // 
+            // checkBox_Embed_UseEncryptionPasswordForStego
+            // 
+            this.checkBox_Embed_UseEncryptionPasswordForStego.AutoSize = true;
+            this.checkBox_Embed_UseEncryptionPasswordForStego.Location = new System.Drawing.Point(9, 201);
+            this.checkBox_Embed_UseEncryptionPasswordForStego.Name = "checkBox_Embed_UseEncryptionPasswordForStego";
+            this.checkBox_Embed_UseEncryptionPasswordForStego.Size = new System.Drawing.Size(244, 17);
+            this.checkBox_Embed_UseEncryptionPasswordForStego.TabIndex = 20;
+            this.checkBox_Embed_UseEncryptionPasswordForStego.Text = "Use encryption password for stego embedding";
+            this.checkBox_Embed_UseEncryptionPasswordForStego.UseVisualStyleBackColor = true;
+            // 
+            // textBox_Embed_StegoPassword
+            // 
+            this.textBox_Embed_StegoPassword.Location = new System.Drawing.Point(9, 237);
+            this.textBox_Embed_StegoPassword.Name = "textBox_Embed_StegoPassword";
+            this.textBox_Embed_StegoPassword.Size = new System.Drawing.Size(561, 20);
+            this.textBox_Embed_StegoPassword.TabIndex = 22;
+            this.textBox_Embed_StegoPassword.UseSystemPasswordChar = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 221);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(86, 13);
+            this.label7.TabIndex = 21;
+            this.label7.Text = "Stego password:";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(605, 307);
+            this.ClientSize = new System.Drawing.Size(605, 407);
             this.Controls.Add(this.tabMode);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -486,7 +548,7 @@
         private System.Windows.Forms.Button button_Embed_SelectCarrierFile;
         private System.Windows.Forms.OpenFileDialog openFileDialog_SelectCarrierFile;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox_Embed_Password;
+        private System.Windows.Forms.TextBox textBox_Embed_EncryptionPassword;
         private System.Windows.Forms.ComboBox comboBox_Embed_EncryptionMode;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
@@ -513,6 +575,11 @@
         private System.Windows.Forms.LinkLabel linkLabel_Embed_Help;
         private System.Windows.Forms.LinkLabel linkLabel_Extract_Help;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.CheckBox checkBox_Embed_CompressData;
+        private System.Windows.Forms.CheckBox checkBox_Embed_UseEncryptionPasswordForStego;
+        private System.Windows.Forms.CheckBox checkBox_Embed_EncryptData;
+        private System.Windows.Forms.TextBox textBox_Embed_StegoPassword;
+        private System.Windows.Forms.Label label7;
     }
 }
 
