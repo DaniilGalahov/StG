@@ -31,7 +31,7 @@ This app provides advanced steganography functions, especially:
 For AES ciphering the app is using software from [this repository](https://github.com/DaniilGalahov/Rijndael-AESLib).
 
 ### In simple words
-This app allows to hide data into `.png` image and then extract it from there utilizing method names *steganography*. 
+This app allows to hide data into `.png` image and then extract it from there utilizing method names *steganography*.
 
 Principle of this method is in mixing of data-to-hide with data of picture utilizing smart math. Imagine you adding a salt to a water. It dissolves and become invisible, but it is still there. And you can extract it, if you, for example, evaporate water. This is what steganography does with data.
 
@@ -86,7 +86,7 @@ This tab allows to embed data to carrier image.
 ![User interface - extract](/images/GUI_Extract.png)
 
 - **Stego image file** field - displays (and allows to input) path to file of stego image, which contains *encrypted data to extract*.
-- **Stego password** field - allows to input your steganography password (at least 8 symbols, with least one capital letter, one digit and one special symbol). 
+- **Stego password** field - allows to input your steganography password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
 - **Encryption mode** combo box - displays selected AES mode and allows to select other available (*AES-128*, *AES-192* or *AES-256*).
 - **Encryption password** field - allows to input your encryption password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
 - **Data file** field - displays (and allows to input) path to file with data (which is the *result of extracting operation*).
@@ -206,7 +206,7 @@ std::vector<uint8_t> ToBytes(std::string str)
 	//embed data to carrier using password as a salt for embedding
 	int result = StGLib::Embed(stegoImageBytes, dataBytes, carrierImageBytes, passwordBytes);
 ```
-**Note:** `StGLib::Embed()` will return `-1` in case if carrier has not enough volume for given data. 
+**Note:** `StGLib::Embed()` will return `-1` in case if carrier has not enough volume for given data.
 
 4. To extract data
 ``` c++
