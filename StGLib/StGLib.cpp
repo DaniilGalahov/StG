@@ -26,7 +26,7 @@ int StGLib::Embed
 	return 0;
 }
 
-int StGLib::Extract
+void StGLib::Extract
 (
 	//out
 	std::vector<uint8_t>& dataBytes,
@@ -43,5 +43,4 @@ int StGLib::Extract
 	uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
 	std::vector<std::tuple<int, int>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, passwordBytes, effectiveVolume);
 	dataBytes = Functions::Extract(stegoImage, shuffledCoordinates);
-	return 0;
 }

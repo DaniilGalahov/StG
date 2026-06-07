@@ -32,9 +32,8 @@ namespace StGLibTest
 			std::vector<uint8_t> stegoImageBytes = LoadFromFile(STEGO_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			std::vector<uint8_t> dataBytes;
-			int result = StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
+			StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
 			std::vector<uint8_t> expectedBytes = LoadFromFile(DATA_FILE_PATH);
-			Assert::AreEqual(result, 0);
 			Assert::IsTrue(dataBytes == expectedBytes);
 		}
 	};

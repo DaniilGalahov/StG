@@ -21,7 +21,7 @@ namespace StGLib
 		double treshold = 0.7
 	);
 
-	int Extract
+	void Extract
 	(
 		//out
 		std::vector<uint8_t>& dataBytes,

@@ -42,12 +42,10 @@ cli::array<System::Byte>^ StGBridge::StGNative::Embed
 		std::vector<uint8_t> nativePasswordBytes = ToNative(passwordBytes);
 		std::vector<uint8_t> nativeStegoImageBytes;
 		int result = StGLib::Embed(nativeStegoImageBytes, nativeDataBytes, nativeCarrierImageBytes, nativePasswordBytes, blockSize, treshold);
-
 		if (result != 0)
 		{
 			throw gcnew Exception("StGLib::Embed failed.");
 		}
-
 		return ToManaged(nativeStegoImageBytes);
 	}
 	catch (const std::exception& exception)
@@ -73,13 +71,7 @@ cli::array<System::Byte>^ StGBridge::StGNative::Extract
 
 		std::vector<uint8_t> nativeStegoImageBytes = ToNative(stegoImageBytes);
 		std::vector<uint8_t> nativePasswordBytes = ToNative(passwordBytes);
-		int result = StGLib::Extract(nativeDataBytes, nativeStegoImageBytes, nativePasswordBytes, blockSize, treshold);
-
-		if (result != 0)
-		{
-			throw gcnew Exception("StGLib::Extract failed.");
-		}
-
+		StGLib::Extract(nativeDataBytes, nativeStegoImageBytes, nativePasswordBytes, blockSize, treshold);
 		return ToManaged(nativeDataBytes);
 	}
 	catch (const std::exception& exception)

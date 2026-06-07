@@ -87,11 +87,11 @@ int Extract
 		std::vector<uint8_t> stegoVector(stegoImageBytes, stegoImageBytes + stegoImageSize);
 		std::vector<uint8_t> passwordVector(passwordBytes, passwordBytes + passwordSize);
 		std::vector<uint8_t> extractedVector;
-		int result = StGLib::Extract(extractedVector, stegoVector, passwordVector, blockSize, treshold);
+		StGLib::Extract(extractedVector, stegoVector, passwordVector, blockSize, treshold);
 		*dataSize = extractedVector.size();
 		*dataBytes = new uint8_t[*dataSize];
 		std::memcpy(*dataBytes, extractedVector.data(), *dataSize);
-		return result;
+		return 0;
 	}
 	catch (const std::bad_alloc&)
 	{
