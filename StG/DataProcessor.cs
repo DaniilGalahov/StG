@@ -66,7 +66,7 @@ namespace StG
             string stegoPassword,
 
             int blockSize = 8,
-            double treshold = 0.7            
+            double treshold = 0.7
         )
         {
             Byte[] stegoImageBytes = File.ReadAllBytes(stegoImageFilePath);

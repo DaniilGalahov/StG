@@ -64,7 +64,7 @@ def embed(data_path, carrier_path, password, stego_path):
         embeddingBlockSize, embeddingTreshold,
         byref(stego_ptr), byref(stego_size)
     )
-    
+
     if res != 0:
         raise RuntimeError(f"Embed failed with code {res}")
 

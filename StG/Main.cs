@@ -103,7 +103,7 @@ namespace StG
         private void SetControlResponseTo(bool value)
         {
             tabMode.Enabled = value;
-            
+
             textBox_Embed_DataFilePath.Enabled = value;
             button_Embed_SelectDataFile.Enabled = value;
             comboBox_Embed_EncryptionMode.Enabled = value;
@@ -153,7 +153,7 @@ namespace StG
                 return false;
             }
 
-            if((Mode)comboBox_Embed_EncryptionMode.SelectedIndex != Mode.AES128 
+            if((Mode)comboBox_Embed_EncryptionMode.SelectedIndex != Mode.AES128
             && (Mode)comboBox_Embed_EncryptionMode.SelectedIndex != Mode.AES192
             && (Mode)comboBox_Embed_EncryptionMode.SelectedIndex != Mode.AES256)
             {
