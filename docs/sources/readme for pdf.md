@@ -21,15 +21,16 @@ To reduce possibility of such detection, **StG** app uses advanced methods of st
 Beside this **StG** provides additional level of protection. Before embedding, it encrypts data with AES encryption system (most advanced encryption standard in the world). This way, even if the attacker will detect the presence of steganographed data, he will not be able to decrypt it - without a password it is just a random noise. There is no methods to decipher AES.
 
 ## Important notices
-1. Data-to-carrier ratio for typical pictures is about 1.5%. I.e., **picture size of 1Mb can contains roughly 15kb of hidden data**.
+1. Data-to-carrier ratio for typical pictures is about 4%. I.e., **picture size of 1Mb can contains roughly 40kb of hidden data**.
 2. Best choice for carrier pictures - **colorful and natural pictures with enough details**. Real photos with cosy interiors or beautiful landscapes will be the best option.
 3. **WARNING!!!** "Under the hood" **StG** contains **military grade** encrypting system. If you forget (or lost) the password, **NO ONE** will be able to decrypt your information! Brute-force time for deciphering AES-256 (even using quantum computers!) exceeds time of heat death of Universe.
 
-## Specifications
+### Specifications
+- **Carrier format:** .png, .jpg, .bmp
 - **Available encryption standards:** AES-128, AES-192, AES-256
+- **Stego format:** .png
 - **Steganography method:** +/-1 LSB, adaptive embedding, randomized selection
-- **Carrier format:** .png
-- **D/C ratio:** 0.015
+- **D/C ratio:** 0.039
 
 ## Download
 Latest version of StG app can be downloaded [here](https://github.com/DaniilGalahov/StG/releases)
@@ -45,20 +46,23 @@ User interface of the app allows to:
 This tab allows to embed data to carrier image.
 
 - **Data file** field - displays (and allows to input) path to file with data you want to *embed*.
-- **Carrier image file** field - displays (and allows to input) path to file of carrier image *into which you want to embed* data.
-- **Password** field - allows to input your password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
 - **Encryption mode** combo box - displays selected AES mode and allows to select other available (*AES-128*, *AES-192* or *AES-256*).
+- **Encryption password** field - allows to input your encryption password (at least 8 symbols, with least one capital letter, one digit and one special symbol). This should not be same as stego password.
+- **Carrier image file** field - displays (and allows to input) path to file of carrier image *into which you want to embed* data.
+- **Stego password** field - allows to input your steganography password (at least 8 symbols, with least one capital letter, one digit and one special symbol). This should not be same as encryption password.
 - **Stego image file** field - displays (and allows to input) path to file of stego image (which is the *result of embedding operation*).
 - **Embed** button - initialize embedding operation. Before embedding, system validates all parameters. If something is wrong, system will output a report in "Status" field in the lower left corner of the window.
 
-*If data volume is too big for this carrier, system will report status "StGLib::Embed failed." In this case choose bigger carrier image.*
+*If data volume is too big for this carrier, system will report status "StGLib::Embed failed. Carrier stegocapacity insufficient." In this case choose bigger carrier image.* 
+
 
 ### "Extract" tab
 This tab allows to extract data from stego image.
 
 - **Stego image file** field - displays (and allows to input) path to file of stego image, which contains *encrypted data to extract*.
-- **Password** field - allows to input your password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
+- **Stego password** field - allows to input your steganography password (at least 8 symbols, with least one capital letter, one digit and one special symbol). 
 - **Encryption mode** combo box - displays selected AES mode and allows to select other available (*AES-128*, *AES-192* or *AES-256*).
+- **Encryption password** field - allows to input your encryption password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
 - **Data file** field - displays (and allows to input) path to file with data (which is the *result of extracting operation*).
 - **Extract** button - initialize extract operation. Before extracting, system validates all parameters. If something is wrong, system will output a report in "Status" field in the lower left corner of the window.
 
@@ -70,26 +74,13 @@ In fields **Data file**, **Carrier image file** and **Stego image file** of both
 ## Roadmap of further development
 - Improve base functional
 	- Reduce distributive size
-	- Stego density control
-	- Consume different image formats as carrier
 - Mobile OS versions
 	- Android version
 	- iOS version (donations for MacBook & iPhone required!)
+- More stego carriers - .bmp, .jpg
 - Stego-messenger **Narodovolets** - distributed, secured, free messenger for all main platforms
 - Advanced stego algorithms (ISGANs, DCT, DWT, RDH)
-
----
-## Questions
-Feel free to ask me if you have any questions or offers.
-
-## Legal notice
-This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
-
-The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. Copyright Notices included at [OpenCV_license.txt](/OpenCV_license.txt").
-
-**Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
-
-App icon was created from logo image using [PNG-to-ICO](https://github.com/FoxP/PNG-to-ICO).
+- Text-based steganography
 
 ---
 ## Support & donations
@@ -100,3 +91,19 @@ If you like this software, please, support me with donations. This will allow me
 **МИР card (T-bank, Russia only):** 2200 7021 5287 4603
 
 **Recepient:** Daniil Galakhov
+
+---
+## Legal notice
+This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
+
+The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. OpenCV Copyright Notices provided in file [OpenCV.txt](/OpenCV.txt).
+
+**Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
+
+**carrier.png** picture also was generated using ChatGPT 5.5.
+
+App icon was created from logo image using [PNG-to-ICO](https://github.com/FoxP/PNG-to-ICO).
+
+---
+## Contacts
+Feel free to ask me through if you have any questions or offers. Use [Issues](https://github.com/DaniilGalahov/StG/issues) for feedback.

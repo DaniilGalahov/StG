@@ -405,8 +405,10 @@ Full source code of Python example you may find in file [Python/example.py](http
 - Mobile OS versions
 	- Android version
 	- iOS version (donations for MacBook & iPhone required!)
+- More stego carriers - .bmp, .jpg
 - Stego-messenger - distributed, secured, free messenger for all main platforms
 - Advanced stego algorithms (ISGANs, DCT, DWT, RDH)
+- Text-based steganography
 
 ---
 <a id="Support_and_donations"></a>
