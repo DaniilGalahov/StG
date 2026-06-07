@@ -10,6 +10,7 @@ This repository includes:
 - **StGABI** - C ABI .dll for usage StGLib with any managed language (Python, Java, Rust, Go, whatever you need).
 
 ## Contents
+<a id="Contents"></a>
 1. [StG app](#StG_usage)
 2. [StG framework](#StG_development)
 3. [Project roadmap](#Project_roadmap)
@@ -18,6 +19,7 @@ This repository includes:
 
 ---
 <a id="StG_usage"></a>
+([back to Contents](#Contents))
 ## StG app
 
 ### Purpose
@@ -95,6 +97,7 @@ In fields **Data file**, **Carrier image file** and **Stego image file** of both
 
 ---
 <a id="StG_development"></a>
+([back to Contents](#Contents))
 ## StG Framework
 
 ### Purpose
@@ -394,6 +397,7 @@ Full source code of Python example you may find in file [Python/example.py](http
 
 ---
 <a id="Project_roadmap"></a>
+([back to Contents](#Contents))
 ## Roadmap of further development
 - Improve base functional
 	- Reduce distributive size
@@ -405,6 +409,7 @@ Full source code of Python example you may find in file [Python/example.py](http
 
 ---
 <a id="Support_and_donations"></a>
+([back to Contents](#Contents))
 ## Support & donations
 If you like this software, please, support me with donations. This will allow me to spend more time on improvement of my projects. Any help will count.
 
@@ -416,6 +421,7 @@ If you like this software, please, support me with donations. This will allow me
 
 --
 <a id="Legal_notice"></a>
+([back to Contents](#Contents))
 ## Legal notice
 This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
 
