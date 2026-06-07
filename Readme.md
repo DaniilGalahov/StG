@@ -415,13 +415,15 @@ If you like this software, please, support me with donations. This will allow me
 **Recepient:** Daniil Galakhov
 
 --
-<a id="P#Legal_notice"></a>
+<a id="#Legal_notice"></a>
 ## Legal notice
 This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
 
 The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. OpenCV Copyright Notices provided in file [OpenCV.txt](/OpenCV.txt").
 
 **Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
+
+**carrier.png** picture also was generated using ChatGPT 5.5.
 
 App icon was created from logo image using [PNG-to-ICO](https://github.com/FoxP/PNG-to-ICO).
 
