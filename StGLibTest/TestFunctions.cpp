@@ -27,7 +27,7 @@ namespace StGLibTest
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
 			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
 			uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
-			Assert::IsTrue(effectiveVolume == 3360); //was 2520 with 0.375, but produces error
+			Assert::IsTrue(effectiveVolume == 1176); //bytes
 		}
 
 		TEST_METHOD(TestShuffleEmbeddingCoordinates)
@@ -38,8 +38,8 @@ namespace StGLibTest
 			uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			std::vector<std::tuple<int, int>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, passwordBytes, effectiveVolume);
-			Assert::IsTrue(std::get<0>(shuffledCoordinates[0]) == 31);
-			Assert::IsTrue(std::get<1>(shuffledCoordinates[0]) == 73);
+			Assert::IsTrue(std::get<0>(shuffledCoordinates[0]) == 104);
+			Assert::IsTrue(std::get<1>(shuffledCoordinates[0]) == 53);
 		}
 
 		TEST_METHOD(TestEmbed)
@@ -49,7 +49,7 @@ namespace StGLibTest
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
 			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
 			uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
-			Assert::IsTrue(effectiveVolume >= sizeof(size_t) + (dataBytes.size() * 8));
+			Assert::IsTrue(effectiveVolume >= sizeof(size_t) + dataBytes.size());
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			std::vector<std::tuple<int, int>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, passwordBytes, effectiveVolume);
 			cv::Mat stegoImage = Functions::Embed(dataBytes, carrierImage, shuffledCoordinates);

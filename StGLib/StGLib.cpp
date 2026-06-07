@@ -16,7 +16,7 @@ int StGLib::Embed
 	cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
 	cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, blockSize, treshold);
 	uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
-	if (effectiveVolume < sizeof(size_t) + (dataBytes.size() * 8))
+	if (effectiveVolume < sizeof(size_t) + dataBytes.size())
 	{
 		return -1;
 	}

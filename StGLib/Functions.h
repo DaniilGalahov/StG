@@ -10,13 +10,13 @@
 
 namespace Functions
 {
-	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, int blockSize = 8, double treshold = 0.7);
+	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, int32_t blockSize = 8, double_t treshold = 0.7);
 
-	uint32_t CalculateEffectiveVolume(const cv::Mat embeddingMask);
+	int32_t CalculateEffectiveVolume(const cv::Mat embeddingMask);
 
-	std::vector<std::tuple<int, int>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, const std::vector<uint8_t>& password, uint32_t effectiveVolume);
+	std::vector<std::tuple<int32_t, int32_t>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, const std::vector<uint8_t>& password, int32_t effectiveVolume);
 
-	cv::Mat Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<int, int>>& shuffledCoordinates);
+	cv::Mat Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates);
 
-	std::vector<uint8_t> Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<int, int>>& shuffledCoordinates);
+	std::vector<uint8_t> Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates);
 }

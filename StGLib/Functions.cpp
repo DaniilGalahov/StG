@@ -1,31 +1,43 @@
 #include "Functions.h"
 
-cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, int blockSize, double treshold)
+cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, int32_t blockSize, double_t treshold)
 {
     cv::Mat yccImage;
     cv::cvtColor(carrierImage, yccImage, cv::COLOR_BGR2YCrCb);
 
+    cv::Mat yccImageY;
+    cv::extractChannel(yccImage, yccImageY, 0);
+
+    cv::Scalar yccImageYMean, yccImageYDev;
+    cv::meanStdDev(yccImageY, yccImageYMean, yccImageYDev);
+
+    int32_t yccImageDeviation = yccImageYDev[0];
+
     cv::Mat embeddingMask = cv::Mat::zeros(yccImage.rows, yccImage.cols, CV_8UC1);
 
-    int rows = (int)(yccImage.rows / blockSize);
-    int cols = (int)(yccImage.cols / blockSize);
+    int32_t rows = (int32_t)(yccImage.rows / blockSize);
+    int32_t cols = (int32_t)(yccImage.cols / blockSize);
 
-    for (int r = 0; r < rows; ++r)
+    for (int32_t r = 0; r < rows; ++r)
     {
-        for (int c = 0; c < cols; ++c)
+        for (int32_t c = 0; c < cols; ++c)
         {
             cv::Rect roi(c * blockSize, r * blockSize, blockSize, blockSize);
+
             cv::Mat yccImageBlock = yccImage(roi);
-            if (cv::mean(yccImageBlock)[0] >= 255 * treshold)
+            cv::Mat embeddingMaskBlock = embeddingMask(roi);
+
+            cv::Mat yccImageBlockY;
+            cv::extractChannel(yccImageBlock, yccImageBlockY, 0);
+
+            cv::Scalar yccImageBlockMean, yccImageBlockDev;
+            cv::meanStdDev(yccImageBlockY, yccImageBlockMean, yccImageBlockDev);
+
+            int32_t yccImageBlockDeviation = yccImageBlockDev[0];
+
+            if (yccImageBlockDeviation > (int32_t)(yccImageDeviation * treshold))
             {
-                cv::Mat embeddingMaskBlock = embeddingMask(roi);
-                for (int i = 0; i < blockSize; ++i)
-                {
-                    for (int j = 0; j < blockSize; ++j)
-                    {
-                        embeddingMaskBlock.at<uchar>(i, j) = 255;
-                    }
-                }
+                embeddingMaskBlock.setTo(255);
             }
         }
     }
@@ -33,23 +45,23 @@ cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, int block
     return embeddingMask;
 }
 
-uint32_t Functions::CalculateEffectiveVolume(const cv::Mat embeddingMask)
+int32_t Functions::CalculateEffectiveVolume(const cv::Mat embeddingMask)
 {
-    return cv::countNonZero(embeddingMask) * 3;
+    return (int32_t)((cv::countNonZero(embeddingMask) * 3)/8);
 }
 
-std::vector<std::tuple<int, int>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, const std::vector<uint8_t>& password, uint32_t effectiveVolume)
+std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, const std::vector<uint8_t>& password, int32_t effectiveVolume)
 {
-    uint32_t loadablePixelQty = effectiveVolume / 3;
-    std::vector<std::tuple<int, int>> embeddingCoordinates;
+    int32_t loadablePixelQty = (int32_t)((effectiveVolume * 8) / 3);
+    std::vector<std::tuple<int32_t, int32_t>> embeddingCoordinates;
     embeddingCoordinates.reserve(loadablePixelQty);
-    for (int r = 0; r < embeddingMask.rows; ++r)
+    for (int32_t r = 0; r < embeddingMask.rows; ++r)
     {
-        for (int c = 0; c < embeddingMask.cols; ++c)
+        for (int32_t c = 0; c < embeddingMask.cols; ++c)
         {
             if (embeddingMask.at<uchar>(r, c) == 255)
             {
-                embeddingCoordinates.push_back(std::tuple<int, int>(r, c));
+                embeddingCoordinates.push_back(std::tuple<int32_t, int32_t>(r, c));
             }
         }
     }
@@ -72,7 +84,7 @@ std::vector<std::tuple<int, int>> Functions::ShuffleEmbeddingCoordinates(const c
     return embeddingCoordinates;
 }
 
-cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<int, int>>& shuffledCoordinates)
+cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates)
 {
     size_t dataLength = dataBytes.size();
     std::vector<uint8_t> dataLengthBytes(sizeof(dataLength));
@@ -88,11 +100,11 @@ cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& c
     size_t pIdx = 0;
     for (size_t cIdx = 0; cIdx < shuffledCoordinates.size(); ++cIdx)
     {
-        int x = std::get<0>(shuffledCoordinates[cIdx]);
-        int y = std::get<1>(shuffledCoordinates[cIdx]);
+        int32_t x = std::get<0>(shuffledCoordinates[cIdx]);
+        int32_t y = std::get<1>(shuffledCoordinates[cIdx]);
         cv::Vec3b& pixel = stegoImage.at<cv::Vec3b>(x, y);
 
-        for (int i = 0; i < 3; ++i)
+        for (int32_t i = 0; i < 3; ++i)
         {
             if (pIdx < payloadBits.size())
             {
@@ -109,32 +121,34 @@ cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& c
     return stegoImage;
 }
 
-std::vector<uint8_t> Functions::Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<int, int>>& shuffledCoordinates)
+std::vector<uint8_t> Functions::Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates)
 {
     std::vector<bool> payloadBits;
     payloadBits.reserve(shuffledCoordinates.size() * 3);
 
     for (size_t cIdx = 0; cIdx < shuffledCoordinates.size(); ++cIdx)
     {
-        int x = std::get<0>(shuffledCoordinates[cIdx]);
-        int y = std::get<1>(shuffledCoordinates[cIdx]);
+        int32_t x = std::get<0>(shuffledCoordinates[cIdx]);
+        int32_t y = std::get<1>(shuffledCoordinates[cIdx]);
         const cv::Vec3b& pixel = stegoImage.at<cv::Vec3b>(x, y);
 
-        for (int i = 0; i < 3; ++i)
+        for (int32_t i = 0; i < 3; ++i)
         {
             payloadBits.push_back(pixel[i] & 0x01); //extract bit from LSB
         }
     }
 
     size_t dataLength;
+    size_t dataLengthOffset = sizeof(dataLength) * 8;
     std::vector<bool>::const_iterator begin = payloadBits.begin();
-    std::vector<bool>::const_iterator end = payloadBits.begin() + (sizeof(dataLength) * 8);
+    std::vector<bool>::const_iterator end = payloadBits.begin() + dataLengthOffset;
     std::vector<bool> dataLengthBits(begin, end);
     std::vector<uint8_t> dataLengthBytes = Convert::ToBytes(dataLengthBits);
     memcpy(&dataLength, dataLengthBytes.data(), sizeof(dataLength));
 
+    size_t dataOffset = dataLength * 8;
     begin = end;
-    end = payloadBits.begin() + (sizeof(dataLength) * 8) + (dataLength * 8);
+    end = end + dataOffset;
     std::vector<bool> dataBits(begin, end);
     std::vector<uint8_t> dataBytes = Convert::ToBytes(dataBits);
 

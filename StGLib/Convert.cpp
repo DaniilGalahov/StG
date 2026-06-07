@@ -3,7 +3,7 @@
 cv::Mat Convert::ToCVMat(const std::vector<uint8_t>& bytes)
 {
     cv::Mat image;
-    image = cv::imdecode(bytes, cv::IMREAD_UNCHANGED);
+    image = cv::imdecode(bytes, cv::IMREAD_COLOR);
     return image;
 }
 
