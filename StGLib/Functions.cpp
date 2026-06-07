@@ -67,11 +67,13 @@ std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates
     }
 
     std::array<uint32_t, 8> hash = SHA256::Hash(password);
-    std::vector<uint8_t> hashBytes(hash.data(), hash.data() + hash.size());
+    size_t hashBytesLength = hash.size() * sizeof(uint32_t);
+    std::vector<uint8_t> hashBytes(hashBytesLength);
+    memcpy(hashBytes.data(), hash.data(), hashBytesLength);
     uint32_t seed = 0;
-    for (size_t i = 0; i < hash.size(); ++i)
+    for (size_t i = 0; i < hashBytes.size(); ++i)
     {
-        uint8_t byte = hash[i];
+        uint8_t byte = hashBytes[i];
         seed += (seed << 8) + byte;
     }
 

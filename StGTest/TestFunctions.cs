@@ -14,8 +14,8 @@ namespace StGTest
         const string CARRIER_FILE_PATH = "..\\..\\..\\files\\carrier.png";
         const string STEGO_FILE_PATH = "..\\..\\..\\files\\stego.png";
 
-        const int EMBEDDING_BLOCK_SIZE = 2; //2 for small pictures (128x128), 8 for generic photos
-        const double EMBEDDING_TRESHOLD = 0.35; //for test purposes only! Use at least 0.5 for practical applications
+        const int EMBEDDING_BLOCK_SIZE = 8;
+        const double EMBEDDING_TRESHOLD = 0.7;
 
         const string PASSWORD = "People are like water - they will always find a way.";
 

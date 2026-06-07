@@ -38,8 +38,8 @@ namespace StGLibTest
 			uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			std::vector<std::tuple<int, int>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, passwordBytes, effectiveVolume);
-			Assert::IsTrue(std::get<0>(shuffledCoordinates[0]) == 104);
-			Assert::IsTrue(std::get<1>(shuffledCoordinates[0]) == 53);
+			Assert::IsTrue(std::get<0>(shuffledCoordinates[0]) == 81);
+			Assert::IsTrue(std::get<1>(shuffledCoordinates[0]) == 99);
 		}
 
 		TEST_METHOD(TestEmbed)
