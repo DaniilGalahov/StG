@@ -9,21 +9,25 @@ This repository includes:
 - **StGBridge** - C++/CLI interface library for usage StGLib in C#-based apps.
 - **StGABI** - C ABI .dll for usage StGLib with any managed language (Python, Java, Rust, Go, whatever you need).
 
-## Usage
-This section separated to two subsections - usage of [StG app](#StG_usage) and development with [StG framework](#StG_development).
+## Contents
+1. [StG app](#StG_usage)
+2. [StG framework](#StG_development)
+3. [Project roadmap](#Project_roadmap)
+4. [Support & donations](#Support_and_donations)
+5. [Legal notice](#Legal_notice)
 
 ---
 <a id="StG_usage"></a>
-### StG
+## StG app
 
-#### Purpose
+### Purpose
 This app provides advanced steganography functions, especially:
 - encrypt data with AES and embed encrypted data into `.png` image.
 - extract encrypted data from `.png` image and decrypt it with AES.
 
 For AES ciphering the app is using software from [this repository](https://github.com/DaniilGalahov/Rijndael-AESLib).
 
-#### In simple words
+### In simple words
 This app allows to hide data into `.png` image and then extract it from there utilizing method names *steganography*. 
 
 Principle of this method is in mixing of data-to-hide with data of picture utilizing smart math. Imagine you adding a salt to a water. It dissolves and become invisible, but it is still there. And you can extract it, if you, for example, evaporate water. This is what steganography does with data.
@@ -36,49 +40,52 @@ To reduce possibility of such detection, **StG** app uses advanced methods of st
 
 Beside this **StG** provides additional level of protection. Before embedding, it encrypts data with AES encryption system (most advanced encryption standard in the world). This way, even if the attacker will detect the presence of steganographed data, he will not be able to decrypt it - without a password it is just a random noise. There is no methods to decipher AES.
 
-#### Important notices
-1. Data-to-carrier ratio for typical pictures is about 1.5%. I.e., **picture size of 1Mb can contains roughly 15kb of hidden data**.
+### Important notices
+1. Data-to-carrier ratio for typical pictures is about 4%. I.e., **picture size of 1Mb can contains roughly 40kb of hidden data**.
 2. Best choice for carrier pictures - **colorful and natural pictures with enough details**. Real photos with cosy interiors or beautiful landscapes will be the best option.
 3. **WARNING!!!** "Under the hood" **StG** contains **military grade** encrypting system. If you forget (or lost) the password, **NO ONE** will be able to decrypt your information! Brute-force time for deciphering AES-256 (even using quantum computers!) exceeds time of heat death of Universe.
 
-#### Specifications
+### Specifications
+- **Carrier format:** .png, .jpg, .bmp
 - **Available encryption standards:** AES-128, AES-192, AES-256
+- **Stego format:** .png
 - **Steganography method:** +/-1 LSB, adaptive embedding, randomized selection
-- **Carrier format:** .png
-- **D/C ratio:** 0.015
+- **D/C ratio:** 0.039
 
-#### Download
+### Download
 Latest version of StG app can be downloaded [here](https://github.com/DaniilGalahov/StG/releases)
 
-#### User interface
+### User interface
 User interface of the app allows to: 
 - choose the operation
 - set up data file, carrier image file and stego image file paths and parameters of encrypting/decrypting
 - initialize operation
 - receive feedback from the app
 
-##### "Embed" tab
+#### "Embed" tab
 
 ![User interface - embed](/images/GUI_Embed.png)
 
 This tab allows to embed data to carrier image.
 
 - **Data file** field - displays (and allows to input) path to file with data you want to *embed*.
-- **Carrier image file** field - displays (and allows to input) path to file of carrier image *into which you want to embed* data.
-- **Password** field - allows to input your password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
 - **Encryption mode** combo box - displays selected AES mode and allows to select other available (*AES-128*, *AES-192* or *AES-256*).
+- **Encryption password** field - allows to input your encryption password (at least 8 symbols, with least one capital letter, one digit and one special symbol). This should not be same as stego password.
+- **Carrier image file** field - displays (and allows to input) path to file of carrier image *into which you want to embed* data.
+- **Stego password** field - allows to input your steganography password (at least 8 symbols, with least one capital letter, one digit and one special symbol). This should not be same as encryption password.
 - **Stego image file** field - displays (and allows to input) path to file of stego image (which is the *result of embedding operation*).
 - **Embed** button - initialize embedding operation. Before embedding, system validates all parameters. If something is wrong, system will output a report in "Status" field in the lower left corner of the window.
 
-*If data volume is too big for this carrier, system will report status "StGLib::Embed failed." In this case choose bigger carrier image.*
+*If data volume is too big for this carrier, system will report status "StGLib::Embed failed. Carrier stegocapacity insufficient." In this case choose bigger carrier image.* 
 
-##### "Extract" tab
+#### "Extract" tab
 
 ![User interface - extract](/images/GUI_Extract.png)
 
 - **Stego image file** field - displays (and allows to input) path to file of stego image, which contains *encrypted data to extract*.
-- **Password** field - allows to input your password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
+- **Stego password** field - allows to input your steganography password (at least 8 symbols, with least one capital letter, one digit and one special symbol). 
 - **Encryption mode** combo box - displays selected AES mode and allows to select other available (*AES-128*, *AES-192* or *AES-256*).
+- **Encryption password** field - allows to input your encryption password (at least 8 symbols, with least one capital letter, one digit and one special symbol).
 - **Data file** field - displays (and allows to input) path to file with data (which is the *result of extracting operation*).
 - **Extract** button - initialize extract operation. Before extracting, system validates all parameters. If something is wrong, system will output a report in "Status" field in the lower left corner of the window.
 
@@ -88,12 +95,12 @@ In fields **Data file**, **Carrier image file** and **Stego image file** of both
 
 ---
 <a id="StG_development"></a>
-### StG Framework
+## StG Framework
 
-#### Purpose
+### Purpose
 This library provides open-source, fully-tested (code coverage by tests ~95%) implementation of advanced steganography with AES encryption for .png image files. Feel free to use it in your own projects (of course, following [License](/License.md) terms).
 
-#### Requirements
+### Requirements
 - Windows-based OS (Developed on Win 10)
 - [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/) 2022 Version 17.14.33 (May 2026)
 	- Microsoft.Component.MSBuild
@@ -106,7 +113,7 @@ This library provides open-source, fully-tested (code coverage by tests ~95%) im
 - [OpenCV 4.12.0](https://github.com/opencv/opencv/releases/download/4.12.0/opencv-4.12.0-windows.exe)
 - [Rijndael AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib)
 
-#### IDE/SDK configuration
+### IDE/SDK configuration
 For installation of all required components you need to open **Visual Studio Installer -> Workloads**, and install next packages:
 - ***Desktop development with C++***
 - ***.NET desktop development***
@@ -116,7 +123,7 @@ After this, you need to open **Visual Studio Installer -> Individual components*
 - ***.NET Framework 4.8 targeting pack***
 - ***C++/CLI support for v143 build tools (Latest)***
 
-#### Deployment
+### Deployment
 - Deploy OpenCV
 	- Download [OpenCV 4.12.0](https://github.com/opencv/opencv/releases/download/4.12.0/opencv-4.12.0-windows.exe).
 	- Extract it into `C:\opencv`.
@@ -133,13 +140,13 @@ After this, you need to open **Visual Studio Installer -> Individual components*
 
 Now you are ready to work.
 
-#### Contents
+### Contents
 This repository provides:
 - Static C++ library **StGLib**, implementing core steganography functional (embedding and extracting with adaptive embedding and randomized selection)
 - C++/CLI interface **StGBridge**, providing access to StGLib functional from C#-based apps
 - C ABI **StGABI**, providing access to StGLib functional from any managed language (Java, Python, Rust, TypeScript, you name it)
 
-#### Connecting to third-party project
+### Connecting to third-party project
 Library made to be versalite and easy for usage, so to connect it to other project, you should follow standard library integration procedure.
 
 **To use in C++ project:**
@@ -156,9 +163,9 @@ Library made to be versalite and easy for usage, so to connect it to other proje
 
 **To use with other programming languages**, follow the standard library integration procedure for selected language. For example, in Python you can use [ctypes](https://docs.python.org/3/library/ctypes.html) library.
 
-#### Coding
+### Coding
 
-##### C++
+#### C++
 1. Include `std::vector` (you will need it for work with library) and library header itself
 ``` c++
 #include <vector>
@@ -180,11 +187,11 @@ std::vector<uint8_t> ToBytes(std::string str)
 
 3. To embed data
 ``` c++
-	//load carrier image file as an array of bytes
-	std::vector<uint8_t> carrierImageBytes = LoadBytesFromFile(carrierFilePath);
-
 	//load data file as an array of bytes
 	std::vector<uint8_t> dataBytes = LoadBytesFromFile(dataFilePath);
+	
+	//load carrier image file as an array of bytes
+	std::vector<uint8_t> carrierImageBytes = LoadBytesFromFile(carrierFilePath);
 
 	//converts password string into array of bytes
 	std::vector<uint8_t> passwordBytes = ToBytes(password);
@@ -193,7 +200,7 @@ std::vector<uint8_t> ToBytes(std::string str)
 	std::vector<uint8_t> stegoImageBytes;
 
 	//embed data to carrier using password as a salt for embedding
-	int result = StGLib::Embed(stegoImageBytes, carrierImageBytes, dataBytes, passwordBytes);
+	int result = StGLib::Embed(stegoImageBytes, dataBytes, carrierImageBytes, passwordBytes);
 ```
 **Note:** `StGLib::Embed()` will return `-1` in case if carrier has not enough volume for given data. 
 
@@ -209,10 +216,10 @@ std::vector<uint8_t> ToBytes(std::string str)
 	std::vector<uint8_t> dataBytes;
 
 	//extract data from stego image
-	int result = StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes);
+	StGLib::Extract(dataBytes, stegoImageBytes, passwordBytes);
 ```
 
-##### C#
+#### C#
 1. Use `System` and `StGBridge`
 ``` c#
 using System;
@@ -233,7 +240,7 @@ using StGBridge;
 	try
 	{
 		//embedding data to carrier
-		Byte[] stegoBytes = StGBridge.StG.Embed(carrierBytes, dataBytes, passwordBytes);
+		Byte[] stegoBytes = StGBridge.StG.Embed(dataBytes, carrierBytes, passwordBytes);
 	}
 	catch (Exception ex)
 	{
@@ -252,7 +259,7 @@ using StGBridge;
 	Byte[] dataBytes = StGBridge.StG.Extract(stegoBytes, passwordBytes);
 ```
 
-##### Python
+#### Python
 *As an example of usage in managed languages*
 1. **Obligatorily** add OpenCV dll directory to Python paths
 ``` python
@@ -271,12 +278,13 @@ stgabi = CDLL(dll_path)
 
 3. Define .dll functions signatures
 ``` python
-from ctypes import POINTER, c_uint8, c_size_t, c_int, c_void_p, byref,
+from ctypes import POINTER, c_uint8, c_size_t, c_int, c_double, c_void_p, byref
 
 stgabi.Embed.argtypes = [
     POINTER(c_uint8), c_size_t,
     POINTER(c_uint8), c_size_t,
     POINTER(c_uint8), c_size_t,
+    c_int, c_double,
     POINTER(POINTER(c_uint8)), POINTER(c_size_t)
 ]
 stgabi.Embed.restype = c_int
@@ -284,12 +292,16 @@ stgabi.Embed.restype = c_int
 stgabi.Extract.argtypes = [
     POINTER(c_uint8), c_size_t,
     POINTER(c_uint8), c_size_t,
+    c_int, c_double,
     POINTER(POINTER(c_uint8)), POINTER(c_size_t)
 ]
 stgabi.Extract.restype = c_int
 
 stgabi.FreeMemory.argtypes = [c_void_p]
 stgabi.FreeMemory.restype = None
+
+embeddingBlockSize = 8
+embeddingTreshold = 0.7
 ```
 
 4. Define Python helper functions
@@ -317,12 +329,13 @@ def embed(data_path, carrier_path, password, stego_path):
 
     # Call C ABI function
     res = stgabi.Embed(
-        carrier_ptr, len(carrier_bytes),
         data_ptr, len(data_bytes),
+        carrier_ptr, len(carrier_bytes),
         password_ptr, len(password),
+        embeddingBlockSize, embeddingTreshold,
         byref(stego_ptr), byref(stego_size)
     )
-    
+
     if res != 0:
         raise RuntimeError(f"Embed failed with code {res}")
 
@@ -352,6 +365,7 @@ def extract(stego_path, password, extracted_path):
     res = stgabi.Extract(
         stego_ptr, len(stego_bytes),
         password_ptr, len(password),
+        embeddingBlockSize, embeddingTreshold,
         byref(extracted_ptr), byref(extracted_size)
     )
 
@@ -379,11 +393,10 @@ Full source code of Python example you may find in file [Python/example.py](http
 *Notice, that functions of StGLib does not implement AES encryption.* To add AES ciphering to your project you should use external libraries such as my [Rijndael AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib).
 
 ---
+<a id="#Project_roadmap"></a>
 ## Roadmap of further development
 - Improve base functional
 	- Reduce distributive size
-	- Stego density control
-	- Consume different image formats as carrier
 - Mobile OS versions
 	- Android version
 	- iOS version (donations for MacBook & iPhone required!)
@@ -391,19 +404,7 @@ Full source code of Python example you may find in file [Python/example.py](http
 - Advanced stego algorithms (ISGANs, DCT, DWT, RDH)
 
 ---
-## Questions
-Feel free to ask me if you have any questions or offers.
-
-## Legal notice
-This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
-
-The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. Copyright Notices included at [OpenCV_license.txt](/OpenCV_license.txt").
-
-**Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
-
-App icon was created from logo image using [PNG-to-ICO](https://github.com/FoxP/PNG-to-ICO).
-
----
+<a id="#Support_and_donations"></a>
 ## Support & donations
 If you like this software, please, support me with donations. This will allow me to spend more time on improvement of my projects. Any help will count.
 
@@ -412,3 +413,18 @@ If you like this software, please, support me with donations. This will allow me
 **МИР card (T-bank, Russia only):** 2200 7021 5287 4603
 
 **Recepient:** Daniil Galakhov
+
+--
+<a id="P#Legal_notice"></a>
+## Legal notice
+This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
+
+The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. OpenCV Copyright Notices provided in file [OpenCV.txt](/OpenCV.txt").
+
+**Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
+
+App icon was created from logo image using [PNG-to-ICO](https://github.com/FoxP/PNG-to-ICO).
+
+---
+## Questions
+Feel free to ask me through Issues if you have any questions or offers.

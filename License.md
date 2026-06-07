@@ -19,6 +19,8 @@ This Software uses the **Rijndael AESLib**, written by **Daniil Galakhov** and p
 This software uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv).
 Copyright (C) 2026, OpenCV, all rights reserved.
 
+OpenCV Copyright Notices provided in file [OpenCV.txt](/OpenCV.txt).
+
 ## 3. Disclaimer of Warranty and Liability
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
 
