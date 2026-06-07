@@ -52,6 +52,8 @@
             this.textBox_Embed_DataFilePath = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBox_Extract_StegoPassword = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.linkLabel_Extract_Help = new System.Windows.Forms.LinkLabel();
             this.label_Extract_Status = new System.Windows.Forms.Label();
             this.buttonExtract = new System.Windows.Forms.Button();
@@ -72,8 +74,6 @@
             this.openFileDialog_SelectStegoFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog_CreateDataFile = new System.Windows.Forms.SaveFileDialog();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.textBox_Extract_StegoPassword = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
             this.tabMode.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -319,6 +319,23 @@
             this.tabPage2.Text = "Extract";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // textBox_Extract_StegoPassword
+            // 
+            this.textBox_Extract_StegoPassword.Location = new System.Drawing.Point(9, 88);
+            this.textBox_Extract_StegoPassword.Name = "textBox_Extract_StegoPassword";
+            this.textBox_Extract_StegoPassword.Size = new System.Drawing.Size(561, 20);
+            this.textBox_Extract_StegoPassword.TabIndex = 34;
+            this.textBox_Extract_StegoPassword.UseSystemPasswordChar = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 72);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(86, 13);
+            this.label11.TabIndex = 33;
+            this.label11.Text = "Stego password:";
+            // 
             // linkLabel_Extract_Help
             // 
             this.linkLabel_Extract_Help.AutoSize = true;
@@ -411,9 +428,9 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(133, 111);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(56, 13);
+            this.label10.Size = new System.Drawing.Size(108, 13);
             this.label10.TabIndex = 23;
-            this.label10.Text = "Password:";
+            this.label10.Text = "Encryption password:";
             // 
             // button_Extract_SelectStegoFile
             // 
@@ -474,23 +491,6 @@
             // saveFileDialog_CreateDataFile
             // 
             this.saveFileDialog_CreateDataFile.Title = "Save data to file";
-            // 
-            // textBox_Extract_StegoPassword
-            // 
-            this.textBox_Extract_StegoPassword.Location = new System.Drawing.Point(9, 88);
-            this.textBox_Extract_StegoPassword.Name = "textBox_Extract_StegoPassword";
-            this.textBox_Extract_StegoPassword.Size = new System.Drawing.Size(561, 20);
-            this.textBox_Extract_StegoPassword.TabIndex = 34;
-            this.textBox_Extract_StegoPassword.UseSystemPasswordChar = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 72);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(86, 13);
-            this.label11.TabIndex = 33;
-            this.label11.Text = "Stego password:";
             // 
             // Main
             // 

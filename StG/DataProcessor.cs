@@ -1,5 +1,7 @@
-﻿using System;
+﻿using AESBridge;
+using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace StG
@@ -9,48 +11,45 @@ namespace StG
         public static void Embed
         (
             string dataFilePath,
-
-            bool compress,
-
-            bool encrypt,
+            string carrierImageFilePath,
+            string stegoImageFilePath,
             int encryptionMode,
             string encryptionPassword,
-
-            bool useEncryptionPasswordForStego,
-
-            string carrierImageFilePath,
             string stegoPassword,
-            int blockSize,
-            double treshold,
 
-            string stegoImageFilePath
+            int blockSize = 8,
+            double treshold = 0.7
         )
         {
             Byte[] dataBytes = File.ReadAllBytes(dataFilePath);
-
-            if (compress)
-            {
-                dataBytes = Functions.Compress(dataBytes);
-            }
-
+            Byte[] compressedDataBytes = Functions.Compress(dataBytes);
             Byte[] encryptionPasswordBytes = Encoding.UTF8.GetBytes(encryptionPassword);
-            if (encrypt)
-            {
-                dataBytes = Functions.Encrypt(dataBytes, encryptionPasswordBytes, (AESBridge.Mode)encryptionMode);
-            }
-
+            Byte[] encryptedDataBytes = Functions.Encrypt(compressedDataBytes, encryptionPasswordBytes, (AESBridge.Mode)encryptionMode);
             Byte[] carrierImageBytes = File.ReadAllBytes(carrierImageFilePath);
-
             Byte[] stegoPasswordBytes = Encoding.UTF8.GetBytes(stegoPassword);
-            if (useEncryptionPasswordForStego)
-            {
-                stegoPasswordBytes = encryptionPasswordBytes;
-            }
-
             try
             {
-                Byte[] stegoImageBytes = Functions.Embed(dataBytes, carrierImageBytes, stegoPasswordBytes, blockSize, treshold);
-                File.WriteAllBytes(stegoImageFilePath, stegoImageBytes);
+                Byte[] stegoImageBytes = Functions.Embed(encryptedDataBytes, carrierImageBytes, stegoPasswordBytes, blockSize, treshold);
+
+                compressedDataBytes = null;
+                encryptedDataBytes = null;
+                carrierImageBytes = null;
+
+                Byte[] ecEncryptedDataBytes = Functions.Extract(stegoImageBytes, stegoPasswordBytes, blockSize, treshold);
+                Byte[] ecCompressedDataBytes = Functions.Decrypt(ecEncryptedDataBytes, encryptionPasswordBytes, (AESBridge.Mode)encryptionMode);
+                Byte[] ecDataBytes = Functions.Decompress(ecCompressedDataBytes);
+
+                MD5 md5 = MD5.Create();
+                string hashData = BitConverter.ToString(md5.ComputeHash(dataBytes));
+                string hashECData = BitConverter.ToString(md5.ComputeHash(ecDataBytes));
+                if(hashData == hashECData)
+                {
+                    File.WriteAllBytes(stegoImageFilePath, stegoImageBytes);
+                }
+                else
+                {
+                    throw new Exception("Embedding failed, try other carrier.");
+                }
             }
             catch (Exception ex)
             {
@@ -61,42 +60,21 @@ namespace StG
         public static void Extract
         (
             string stegoImageFilePath,
-            string stegoPassword,
-            int blockSize,
-            double treshold,
-
-            bool useStegoPasswordForEncryption,
-
-            bool encrypted,
+            string dataFilePath,
             int encryptionMode,
             string encryptionPassword,
+            string stegoPassword,
 
-            bool compressed,
-
-            string dataFilePath
+            int blockSize = 8,
+            double treshold = 0.7            
         )
         {
             Byte[] stegoImageBytes = File.ReadAllBytes(stegoImageFilePath);
             Byte[] stegoPasswordBytes = Encoding.UTF8.GetBytes(stegoPassword);
-
-            Byte[] dataBytes = Functions.Extract(stegoImageBytes, stegoPasswordBytes, blockSize, treshold);
-
-            if (encrypted)
-            {
-                Byte[] encryptionPasswordBytes = Encoding.UTF8.GetBytes(encryptionPassword);
-                if (useStegoPasswordForEncryption)
-                {
-                    encryptionPasswordBytes = stegoPasswordBytes;
-                }
-
-                dataBytes = Functions.Decrypt(dataBytes, encryptionPasswordBytes, (AESBridge.Mode)encryptionMode);
-            }
-
-            if (compressed)
-            {
-                dataBytes = Functions.Decompress(dataBytes);
-            }
-
+            Byte[] encryptedDataBytes = Functions.Extract(stegoImageBytes, stegoPasswordBytes, blockSize, treshold);
+            Byte[] encryptionPasswordBytes = Encoding.UTF8.GetBytes(encryptionPassword);
+            Byte[] compressedDataBytes = Functions.Decrypt(encryptedDataBytes, encryptionPasswordBytes, (AESBridge.Mode)encryptionMode);
+            Byte[] dataBytes = Functions.Decompress(compressedDataBytes);
             File.WriteAllBytes(dataFilePath, dataBytes);
         }
     }

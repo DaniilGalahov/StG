@@ -255,22 +255,12 @@ namespace StG
                 {
                     DataProcessor.Embed
                     (
-                        dataFilePath: textBox_Embed_DataFilePath.Text,
-
-                        compress: true,
-
-                        encrypt: true,
-                        encryptionMode: comboBox_Embed_EncryptionMode.SelectedIndex,
-                        encryptionPassword: textBox_Embed_EncryptionPassword.Text,
-
-                        useEncryptionPasswordForStego: false,
-
-                        carrierImageFilePath: textBox_Embed_CarrierFilePath.Text,
-                        stegoPassword: textBox_Embed_StegoPassword.Text,
-                        blockSize: 8,
-                        treshold: 0.7,
-
-                        stegoImageFilePath: textBox_Embed_StegoFilePath.Text
+                        textBox_Embed_DataFilePath.Text,
+                        textBox_Embed_CarrierFilePath.Text,
+                        textBox_Embed_StegoFilePath.Text,
+                        comboBox_Embed_EncryptionMode.SelectedIndex,
+                        textBox_Embed_EncryptionPassword.Text,
+                        textBox_Embed_StegoPassword.Text
                     );
                     SetEmbedStatus("Ready");
                 }
@@ -294,21 +284,12 @@ namespace StG
 
                 DataProcessor.Extract
                 (
-                    stegoImageFilePath: textBox_Extract_StegoFilePath.Text,
-                    stegoPassword: textBox_Extract_StegoPassword.Text,
-                    blockSize: 8,
-                    treshold: 0.7,
-                    
-                    useStegoPasswordForEncryption: false,
-                    
-                    encrypted: true,
-                    encryptionMode: comboBox_Extract_EncryptionMode.SelectedIndex,
-                    encryptionPassword: textBox_Extract_EncryptionPassword.Text,
-                    
-                    compressed: true,
-                    dataFilePath: textBox_Extract_DataFilePath.Text
+                    textBox_Extract_StegoFilePath.Text,
+                    textBox_Extract_DataFilePath.Text,
+                    comboBox_Extract_EncryptionMode.SelectedIndex,
+                    textBox_Extract_EncryptionPassword.Text,
+                    textBox_Extract_StegoPassword.Text
                 );
-
                 SetExtractStatus("Ready");
                 EnableControls();
             }
