@@ -31,8 +31,8 @@ stgabi.Extract.restype = c_int
 stgabi.FreeMemory.argtypes = [c_void_p]
 stgabi.FreeMemory.restype = None
 
-embeddingBlockSize = 2 # 2 for small pictures (128x128), 8 for generic photos
-embeddingTreshold = 0.35 # for test purposes only! Use at least 0.5 for practical applications
+embeddingBlockSize = 8
+embeddingTreshold = 0.7
 
 # Define helper functions
 def read_bytes(path):
