@@ -393,7 +393,7 @@ Full source code of Python example you may find in file [Python/example.py](http
 *Notice, that functions of StGLib does not implement AES encryption.* To add AES ciphering to your project you should use external libraries such as my [Rijndael AESLib](https://github.com/DaniilGalahov/Rijndael-AESLib).
 
 ---
-<a id="#Project_roadmap"></a>
+<a id="Project_roadmap"></a>
 ## Roadmap of further development
 - Improve base functional
 	- Reduce distributive size
@@ -404,7 +404,7 @@ Full source code of Python example you may find in file [Python/example.py](http
 - Advanced stego algorithms (ISGANs, DCT, DWT, RDH)
 
 ---
-<a id="#Support_and_donations"></a>
+<a id="Support_and_donations"></a>
 ## Support & donations
 If you like this software, please, support me with donations. This will allow me to spend more time on improvement of my projects. Any help will count.
 
@@ -415,11 +415,11 @@ If you like this software, please, support me with donations. This will allow me
 **Recepient:** Daniil Galakhov
 
 --
-<a id="#Legal_notice"></a>
+<a id="Legal_notice"></a>
 ## Legal notice
 This software is distributing under MIT/BSD-like license. Full terms are available in the [License](/License.md) file.
 
-The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. OpenCV Copyright Notices provided in file [OpenCV.txt](/OpenCV.txt").
+The project uses **OpenCV** [Open Source Computer Vision Library](https://github.com/opencv/opencv). The OpenCV License requirements completed. OpenCV Copyright Notices provided in file [OpenCV.txt](/OpenCV.txt).
 
 **Libertatian Stegosaurus Randall**, who are a mascot of the project, desiged by author of the project. Logo image generated using [ChatGPT 5.5](https://chatgpt.com/).
 
