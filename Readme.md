@@ -16,6 +16,7 @@ This repository includes:
 3. [Project roadmap](#Project_roadmap)
 4. [Support & donations](#Support_and_donations)
 5. [Legal notice](#Legal_notice)
+6. [Contacts](#Contacts)
 
 ---
 <a id="StG_usage"></a>
@@ -419,7 +420,7 @@ If you like this software, please, support me with donations. This will allow me
 
 **Recepient:** Daniil Galakhov
 
---
+---
 <a id="Legal_notice"></a>
 ([back to Contents](#Contents))
 ## Legal notice
@@ -434,5 +435,7 @@ The project uses **OpenCV** [Open Source Computer Vision Library](https://github
 App icon was created from logo image using [PNG-to-ICO](https://github.com/FoxP/PNG-to-ICO).
 
 ---
-## Questions
-Feel free to ask me through Issues if you have any questions or offers.
+<a id="Contacts"></a>
+([back to Contents](#Contents))
+## Contacts
+Feel free to ask me through if you have any questions or offers. Use [Issues](https://github.com/DaniilGalahov/StG/issues) for feedback.
