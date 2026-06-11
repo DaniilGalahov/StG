@@ -50,7 +50,7 @@ int32_t Functions::CalculateEffectiveVolume(const cv::Mat embeddingMask)
     return (int32_t)((cv::countNonZero(embeddingMask) * 3)/8);
 }
 
-std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, const std::vector<uint8_t>& password, int32_t effectiveVolume)
+std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, int32_t effectiveVolume, int32_t seed)
 {
     int32_t loadablePixelQty = (int32_t)((effectiveVolume * 8) / 3);
     std::vector<std::tuple<int32_t, int32_t>> embeddingCoordinates;
@@ -66,7 +66,6 @@ std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates
         }
     }
 
-    uint32_t seed = Random::Seed(password);
     uint32_t UDPRN = Random::Number((uint32_t)embeddingCoordinates.size(), seed);
 
     std::shuffle(embeddingCoordinates.begin(), embeddingCoordinates.end(), std::default_random_engine(UDPRN));

@@ -13,7 +13,7 @@ namespace Functions
 
 	int32_t CalculateEffectiveVolume(const cv::Mat embeddingMask);
 
-	std::vector<std::tuple<int32_t, int32_t>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, const std::vector<uint8_t>& password, int32_t effectiveVolume);
+	std::vector<std::tuple<int32_t, int32_t>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, int32_t effectiveVolume, int32_t seed);
 
 	cv::Mat Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates);
 
