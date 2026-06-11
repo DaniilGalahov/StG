@@ -66,22 +66,10 @@ std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates
         }
     }
 
-    std::array<uint32_t, 8> hash = SHA256::Hash(password);
-    size_t hashBytesLength = hash.size() * sizeof(uint32_t);
-    std::vector<uint8_t> hashBytes(hashBytesLength);
-    memcpy(hashBytes.data(), hash.data(), hashBytesLength);
-    uint32_t seed = 0;
-    for (size_t i = 0; i < hashBytes.size(); ++i)
-    {
-        uint8_t byte = hashBytes[i];
-        seed += (seed << 8) + byte;
-    }
+    uint32_t seed = Random::Seed(password);
+    uint32_t UDPRN = Random::Number((uint32_t)embeddingCoordinates.size(), seed);
 
-    std::mt19937 gen(seed);
-    std::uniform_int_distribution<uint32_t> dist(0, (uint32_t)embeddingCoordinates.size());
-    uint32_t randomNumber = dist(gen);
-
-    std::shuffle(embeddingCoordinates.begin(), embeddingCoordinates.end(), std::default_random_engine(randomNumber));
+    std::shuffle(embeddingCoordinates.begin(), embeddingCoordinates.end(), std::default_random_engine(UDPRN));
 
     return embeddingCoordinates;
 }

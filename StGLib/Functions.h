@@ -1,15 +1,14 @@
 #pragma once
 #include <vector>
 #include <tuple>
-#include <random>
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 
-#include "SHA256.h"
 #include "Convert.h"
+#include "Random.h"
 
 namespace Functions
-{
+{	
 	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, int32_t blockSize = 8, double_t treshold = 0.7);
 
 	int32_t CalculateEffectiveVolume(const cv::Mat embeddingMask);

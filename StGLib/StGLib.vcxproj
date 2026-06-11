@@ -147,11 +147,13 @@
   <ItemGroup>
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="Functions.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="StGLib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Convert.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="StGLib.h" />
   </ItemGroup>
   <ItemGroup>
