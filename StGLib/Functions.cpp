@@ -1,56 +1,104 @@
 #include "Functions.h"
 
-cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, int32_t blockSize, double_t treshold)
+size_t Functions::PayloadBytesQty(std::vector<uint8_t> dataBytes)
+{
+    return (size_t)sizeof(size_t) + dataBytes.size();
+}
+
+size_t Functions::PayloadBitsQty(std::vector<uint8_t> dataBytes)
+{
+    return Functions::PayloadBytesQty(dataBytes) * 8;
+}
+
+size_t Functions::PayloadPixelQty(std::vector<uint8_t> dataBytes)
+{
+    return (size_t)ceil(Functions::PayloadBitsQty(dataBytes) / 3);
+}
+
+cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, const std::vector<uint8_t>& passwordBytes, size_t payloadPixelQty)
 {
     cv::Mat yccImage;
     cv::cvtColor(carrierImage, yccImage, cv::COLOR_BGR2YCrCb);
 
+    cv::Mat complexityMask = cv::Mat::zeros(yccImage.rows, yccImage.cols, CV_8UC1);
+
     cv::Mat yccImageY;
     cv::extractChannel(yccImage, yccImageY, 0);
 
-    cv::Scalar yccImageYMean, yccImageYDev;
-    cv::meanStdDev(yccImageY, yccImageYMean, yccImageYDev);
+    cv::Mat yccImageBlock, complexityMaskBlock;
+    cv::Mat yccImageBlockY;
+    cv::Mat gradX, gradY, absGradX, absGradY, sobelY;
 
-    int32_t yccImageDeviation = yccImageYDev[0];
+    cv::Scalar yccImageBlockMean, yccImageBlockDev, sobelMean;
 
-    cv::Mat embeddingMask = cv::Mat::zeros(yccImage.rows, yccImage.cols, CV_8UC1);
+    uint8_t variance, edgeEnergy, complexity;
 
-    int32_t rows = (int32_t)(yccImage.rows / blockSize);
-    int32_t cols = (int32_t)(yccImage.cols / blockSize);
+    uint32_t rows = (uint32_t)(yccImage.rows / blockSize);
+    uint32_t cols = (uint32_t)(yccImage.cols / blockSize);
 
-    for (int32_t r = 0; r < rows; ++r)
+    for (uint32_t r = 0; r < rows; ++r)
     {
-        for (int32_t c = 0; c < cols; ++c)
+        for (uint32_t c = 0; c < cols; ++c)
         {
             cv::Rect roi(c * blockSize, r * blockSize, blockSize, blockSize);
 
-            cv::Mat yccImageBlock = yccImage(roi);
-            cv::Mat embeddingMaskBlock = embeddingMask(roi);
+            yccImageBlock = yccImage(roi);
+            complexityMaskBlock = complexityMask(roi);
 
-            cv::Mat yccImageBlockY;
             cv::extractChannel(yccImageBlock, yccImageBlockY, 0);
-
-            cv::Scalar yccImageBlockMean, yccImageBlockDev;
             cv::meanStdDev(yccImageBlockY, yccImageBlockMean, yccImageBlockDev);
+            variance = (uint8_t)yccImageBlockDev[0];
 
-            int32_t yccImageBlockDeviation = yccImageBlockDev[0];
+            cv::Sobel(yccImageBlockY, gradX, CV_8UC1, 1, 0, 3);
+            cv::convertScaleAbs(gradX, absGradX);
+            cv::Sobel(yccImageBlockY, gradY, CV_8UC1, 0, 1, 3);
+            cv::convertScaleAbs(gradY, absGradY);
+            cv::addWeighted(absGradX, 0.5, absGradY, 0.5, 0, sobelY);
+            sobelMean = cv::mean(sobelY);
+            edgeEnergy = (uint8_t)sobelMean[0];
 
-            if (yccImageBlockDeviation > (int32_t)(yccImageDeviation * treshold))
+            complexity = (uint8_t)floor((variance + edgeEnergy) / 2);
+
+            complexityMaskBlock.setTo(complexity);
+        }
+    }
+
+    //randomization of complexity mask must not be done via cv::Mat::forEach (PRNG produces errors in multy-treading calls)
+    PRNG prng = PRNG(passwordBytes);
+    uint32_t pixelIndex;
+    for (uint32_t r = 0; r < (uint32_t)complexityMask.rows; r++)
+    {
+        for (uint32_t c = 0; c < (uint32_t)complexityMask.cols; c++)
+        {
+            pixelIndex = (r + 1) * (c + 1);
+            if (prng.NumberWithin(pixelIndex) < (uint32_t)floor(pixelIndex / 2))
             {
-                embeddingMaskBlock.setTo(255);
+                complexityMask.at<uint8_t>(r,c) = (uint8_t)floor(complexityMask.at<uint8_t>(r, c) / 2);
             }
         }
+    }
+
+    cv::Mat embeddingMask = cv::Mat::zeros(complexityMask.rows, complexityMask.cols, CV_8UC1);
+    double  maxVal;
+    cv::Point maxLoc;
+    for (size_t q = 0; q < payloadPixelQty; q++)
+    {
+        cv::minMaxLoc(complexityMask, nullptr, &maxVal, nullptr, &maxLoc);
+        embeddingMask.at<uint8_t>(maxLoc) = 255;
+        complexityMask.at<uint8_t>(maxLoc) = 0;
     }
 
     return embeddingMask;
 }
 
+/*
 int32_t Functions::CalculateEffectiveVolume(const cv::Mat embeddingMask)
 {
     return (int32_t)((cv::countNonZero(embeddingMask) * 3)/8);
 }
+*/
 
-std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, int32_t effectiveVolume, int32_t seed)
+std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, int32_t effectiveVolume, const std::vector<unsigned char>& passwordBytes)
 {
     int32_t loadablePixelQty = (int32_t)((effectiveVolume * 8) / 3);
     std::vector<std::tuple<int32_t, int32_t>> embeddingCoordinates;
@@ -66,9 +114,10 @@ std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates
         }
     }
 
-    uint32_t UDPRN = Random::Number((uint32_t)embeddingCoordinates.size(), seed);
+    PRNG prng = PRNG(passwordBytes);
+    uint32_t udprn = prng.NumberWithin((uint32_t)embeddingCoordinates.size());
 
-    std::shuffle(embeddingCoordinates.begin(), embeddingCoordinates.end(), std::default_random_engine(UDPRN));
+    std::shuffle(embeddingCoordinates.begin(), embeddingCoordinates.end(), std::default_random_engine(udprn));
 
     return embeddingCoordinates;
 }
