@@ -17,9 +17,9 @@ namespace Functions
 
 	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, const std::vector<uint8_t>& passwordBytes, size_t payloadPixelQty);
 
-	std::vector<std::tuple<int32_t, int32_t>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, int32_t effectiveVolume, const std::vector<unsigned char>& passwordBytes);
+	std::vector<std::tuple<uint32_t, uint32_t>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, size_t payloadPixelQty, const std::vector<uint8_t>& passwordBytes);
 
-	cv::Mat Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates);
+	cv::Mat Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<uint32_t, uint32_t>>& shuffledCoordinates);
 
-	std::vector<uint8_t> Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates);
+	std::vector<uint8_t> Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<uint32_t, uint32_t>>& shuffledCoordinates);
 }

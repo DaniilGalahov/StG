@@ -91,25 +91,17 @@ cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t 
     return embeddingMask;
 }
 
-/*
-int32_t Functions::CalculateEffectiveVolume(const cv::Mat embeddingMask)
+std::vector<std::tuple<uint32_t, uint32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, size_t payloadPixelQty, const std::vector<uint8_t>& passwordBytes)
 {
-    return (int32_t)((cv::countNonZero(embeddingMask) * 3)/8);
-}
-*/
-
-std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, int32_t effectiveVolume, const std::vector<unsigned char>& passwordBytes)
-{
-    int32_t loadablePixelQty = (int32_t)((effectiveVolume * 8) / 3);
-    std::vector<std::tuple<int32_t, int32_t>> embeddingCoordinates;
-    embeddingCoordinates.reserve(loadablePixelQty);
-    for (int32_t r = 0; r < embeddingMask.rows; ++r)
+    std::vector<std::tuple<uint32_t, uint32_t>> embeddingCoordinates;
+    embeddingCoordinates.reserve(payloadPixelQty);
+    for (uint32_t r = 0; r < (uint32_t)embeddingMask.rows; r++)
     {
-        for (int32_t c = 0; c < embeddingMask.cols; ++c)
+        for (uint32_t c = 0; c < (uint32_t)embeddingMask.cols; c++)
         {
-            if (embeddingMask.at<uchar>(r, c) == 255)
+            if (embeddingMask.at<uint8_t>(r, c) == 255)
             {
-                embeddingCoordinates.push_back(std::tuple<int32_t, int32_t>(r, c));
+                embeddingCoordinates.push_back(std::tuple<uint32_t, uint32_t>(r, c));
             }
         }
     }
@@ -122,7 +114,7 @@ std::vector<std::tuple<int32_t, int32_t>> Functions::ShuffleEmbeddingCoordinates
     return embeddingCoordinates;
 }
 
-cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates)
+cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<uint32_t, uint32_t>>& shuffledCoordinates)
 {
     size_t dataLength = dataBytes.size();
     std::vector<uint8_t> dataLengthBytes(sizeof(dataLength));
@@ -159,7 +151,7 @@ cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& c
     return stegoImage;
 }
 
-std::vector<uint8_t> Functions::Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<int32_t, int32_t>>& shuffledCoordinates)
+std::vector<uint8_t> Functions::Extract(const cv::Mat& stegoImage, const std::vector<std::tuple<uint32_t, uint32_t>>& shuffledCoordinates)
 {
     std::vector<bool> payloadBits;
     payloadBits.reserve(shuffledCoordinates.size() * 3);
