@@ -161,7 +161,7 @@
   <ItemGroup>
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="TestConvert.cpp" />
-    <ClCompile Include="TestRandom.cpp" />
+    <ClCompile Include="TestPRNG.cpp" />
     <ClCompile Include="TestStGLib.cpp" />
     <ClCompile Include="TestFunctions.cpp" />
   </ItemGroup>
