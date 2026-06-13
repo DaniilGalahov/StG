@@ -5,12 +5,16 @@
 
 class PRNG
 {
-	static unsigned int seed;
-	static std::mt19937 generator;
+	unsigned int seed;
+	std::mt19937 generator;
 
 public:
-	static void SetSeed(unsigned int seed);
-	static void SetSeed(const std::vector<unsigned char>& password);
-	static unsigned int GetSeed();
-	static unsigned int NumberWithin(unsigned int distributionSize);
+	static unsigned int SeedFrom(const std::vector<unsigned char>& bytes);
+
+	PRNG(unsigned int seed);
+	PRNG(const std::vector<unsigned char>& passwordBytes);
+	void SetSeed(unsigned int seed);
+	void SetSeed(const std::vector<unsigned char>& passwordBytes);
+	unsigned int GetSeed();
+	unsigned int NumberWithin(unsigned int distributionSize);
 };

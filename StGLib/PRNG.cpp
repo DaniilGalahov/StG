@@ -1,17 +1,8 @@
 #include "PRNG.h"
 
-unsigned int PRNG::seed;
-std::mt19937 PRNG::generator;
-
-void PRNG::SetSeed(unsigned int seed)
+unsigned int PRNG::SeedFrom(const std::vector<unsigned char>& bytes)
 {
-    PRNG::seed = seed;
-    PRNG::generator.seed(PRNG::seed);
-}
-
-void PRNG::SetSeed(const std::vector<unsigned char>& passwordBytes)
-{
-    std::array<unsigned int, 8> hash = SHA256::Hash(passwordBytes);
+    std::array<unsigned int, 8> hash = SHA256::Hash(bytes);
 
     size_t hashBytesLength = hash.size() * sizeof(unsigned int);
     std::vector<unsigned char> hashBytes(hashBytesLength);
@@ -24,7 +15,28 @@ void PRNG::SetSeed(const std::vector<unsigned char>& passwordBytes)
         seed += (seed << 8) + byte;
     }
 
+    return seed;
+}
+
+PRNG::PRNG(unsigned int seed)
+{
     SetSeed(seed);
+}
+
+PRNG::PRNG(const std::vector<unsigned char>& passwordBytes)
+{
+    SetSeed(passwordBytes);
+}
+
+void PRNG::SetSeed(unsigned int seed)
+{
+    PRNG::seed = seed;
+    PRNG::generator = std::mt19937(PRNG::seed);
+}
+
+void PRNG::SetSeed(const std::vector<unsigned char>& passwordBytes)
+{
+    SetSeed(SeedFrom(passwordBytes));
 }
 
 unsigned int PRNG::GetSeed()
