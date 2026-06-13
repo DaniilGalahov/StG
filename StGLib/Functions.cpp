@@ -15,7 +15,7 @@ size_t Functions::PayloadPixelQty(std::vector<uint8_t> dataBytes)
     return (size_t)ceil(Functions::PayloadBitsQty(dataBytes) / 3);
 }
 
-cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, const std::vector<uint8_t>& passwordBytes, size_t payloadPixelQty)
+cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, const std::vector<uint8_t>& passwordBytes, double_t treshold)
 {
     cv::Mat yccImage;
     cv::cvtColor(carrierImage, yccImage, cv::COLOR_BGR2YCrCb);
@@ -36,9 +36,9 @@ cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t 
     uint32_t rows = (uint32_t)(yccImage.rows / blockSize);
     uint32_t cols = (uint32_t)(yccImage.cols / blockSize);
 
-    for (uint32_t r = 0; r < rows; ++r)
+    for (uint32_t r = 0; r < rows; r++)
     {
-        for (uint32_t c = 0; c < cols; ++c)
+        for (uint32_t c = 0; c < cols; c++)
         {
             cv::Rect roi(c * blockSize, r * blockSize, blockSize, blockSize);
 
@@ -49,15 +49,15 @@ cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t 
             cv::meanStdDev(yccImageBlockY, yccImageBlockMean, yccImageBlockDev);
             variance = (uint8_t)yccImageBlockDev[0];
 
-            cv::Sobel(yccImageBlockY, gradX, CV_8UC1, 1, 0, 3);
+            cv::Sobel(yccImageBlockY, gradX, CV_16S, 1, 0, 3);
             cv::convertScaleAbs(gradX, absGradX);
-            cv::Sobel(yccImageBlockY, gradY, CV_8UC1, 0, 1, 3);
+            cv::Sobel(yccImageBlockY, gradY, CV_16S, 0, 1, 3);
             cv::convertScaleAbs(gradY, absGradY);
             cv::addWeighted(absGradX, 0.5, absGradY, 0.5, 0, sobelY);
             sobelMean = cv::mean(sobelY);
             edgeEnergy = (uint8_t)sobelMean[0];
 
-            complexity = (uint8_t)floor((variance + edgeEnergy) / 2);
+            complexity = (uint8_t)floor((variance + edgeEnergy) / 2.0);
 
             complexityMaskBlock.setTo(complexity);
         }
@@ -65,36 +65,41 @@ cv::Mat Functions::DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t 
 
     //randomization of complexity mask must not be done via cv::Mat::forEach (PRNG produces errors in multy-treading calls)
     PRNG prng = PRNG(passwordBytes);
-    uint32_t pixelIndex;
     for (uint32_t r = 0; r < (uint32_t)complexityMask.rows; r++)
     {
         for (uint32_t c = 0; c < (uint32_t)complexityMask.cols; c++)
         {
-            pixelIndex = (r + 1) * (c + 1);
-            if (prng.NumberWithin(pixelIndex) < (uint32_t)floor(pixelIndex / 2))
-            {
-                complexityMask.at<uint8_t>(r,c) = (uint8_t)floor(complexityMask.at<uint8_t>(r, c) / 2);
-            }
+            complexityMask.at<uint8_t>(r, c) += (uint8_t)prng.NumberWithin((uint32_t)complexityMask.at<uint8_t>(r, c));
         }
     }
 
     cv::Mat embeddingMask = cv::Mat::zeros(complexityMask.rows, complexityMask.cols, CV_8UC1);
-    double  maxVal;
+    double minVal, maxVal;
+    cv::minMaxLoc(complexityMask, &minVal, &maxVal);
+    uint8_t tresholdVal = (uint8_t)ceil(minVal + (treshold * (maxVal - minVal)));
+
+    uint8_t currentVal = (uint8_t)ceil(maxVal);
     cv::Point maxLoc;
-    for (size_t q = 0; q < payloadPixelQty; q++)
+    while (currentVal > tresholdVal)
     {
         cv::minMaxLoc(complexityMask, nullptr, &maxVal, nullptr, &maxLoc);
         embeddingMask.at<uint8_t>(maxLoc) = 255;
         complexityMask.at<uint8_t>(maxLoc) = 0;
+        currentVal = (uint8_t)ceil(maxVal);
     }
 
     return embeddingMask;
 }
 
-std::vector<std::tuple<uint32_t, uint32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, size_t payloadPixelQty, const std::vector<uint8_t>& passwordBytes)
+size_t Functions::CalculateEmbeddablePixelQty(const cv::Mat& embeddingMask)
+{
+    return (size_t)(cv::countNonZero(embeddingMask));
+}
+
+std::vector<std::tuple<uint32_t, uint32_t>> Functions::ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, size_t embeddablePixelQty, const std::vector<uint8_t>& passwordBytes)
 {
     std::vector<std::tuple<uint32_t, uint32_t>> embeddingCoordinates;
-    embeddingCoordinates.reserve(payloadPixelQty);
+    embeddingCoordinates.reserve(embeddablePixelQty);
     for (uint32_t r = 0; r < (uint32_t)embeddingMask.rows; r++)
     {
         for (uint32_t c = 0; c < (uint32_t)embeddingMask.cols; c++)
@@ -130,11 +135,11 @@ cv::Mat Functions::Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& c
     size_t pIdx = 0;
     for (size_t cIdx = 0; cIdx < shuffledCoordinates.size(); ++cIdx)
     {
-        int32_t x = std::get<0>(shuffledCoordinates[cIdx]);
-        int32_t y = std::get<1>(shuffledCoordinates[cIdx]);
+        uint32_t x = std::get<0>(shuffledCoordinates[cIdx]);
+        uint32_t y = std::get<1>(shuffledCoordinates[cIdx]);
         cv::Vec3b& pixel = stegoImage.at<cv::Vec3b>(x, y);
 
-        for (int32_t i = 0; i < 3; ++i)
+        for (uint8_t i = 0; i < 3; ++i)
         {
             if (pIdx < payloadBits.size())
             {
@@ -158,11 +163,11 @@ std::vector<uint8_t> Functions::Extract(const cv::Mat& stegoImage, const std::ve
 
     for (size_t cIdx = 0; cIdx < shuffledCoordinates.size(); ++cIdx)
     {
-        int32_t x = std::get<0>(shuffledCoordinates[cIdx]);
-        int32_t y = std::get<1>(shuffledCoordinates[cIdx]);
+        uint32_t x = std::get<0>(shuffledCoordinates[cIdx]);
+        uint32_t y = std::get<1>(shuffledCoordinates[cIdx]);
         const cv::Vec3b& pixel = stegoImage.at<cv::Vec3b>(x, y);
 
-        for (int32_t i = 0; i < 3; ++i)
+        for (uint8_t i = 0; i < 3; ++i)
         {
             payloadBits.push_back(pixel[i] & 0x01); //extract bit from LSB
         }

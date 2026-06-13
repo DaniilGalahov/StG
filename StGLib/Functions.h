@@ -15,9 +15,11 @@ namespace Functions
 
 	size_t PayloadPixelQty(std::vector<uint8_t> dataBytes);
 
-	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, const std::vector<uint8_t>& passwordBytes, size_t payloadPixelQty);
+	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, const std::vector<uint8_t>& passwordBytes, double_t treshold);
 
-	std::vector<std::tuple<uint32_t, uint32_t>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, size_t payloadPixelQty, const std::vector<uint8_t>& passwordBytes);
+	size_t CalculateEmbeddablePixelQty(const cv::Mat& embeddingMask);
+
+	std::vector<std::tuple<uint32_t, uint32_t>> ShuffleEmbeddingCoordinates(const cv::Mat& embeddingMask, size_t embeddablePixelQty, const std::vector<uint8_t>& passwordBytes);
 
 	cv::Mat Embed(const std::vector<uint8_t>& dataBytes, const cv::Mat& carrierImage, const std::vector<std::tuple<uint32_t, uint32_t>>& shuffledCoordinates);
 

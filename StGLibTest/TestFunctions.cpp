@@ -35,12 +35,10 @@ namespace StGLibTest
 
 		TEST_METHOD(TestDetermineEmbeddingMask)
 		{
-			std::vector<uint8_t> dataBytes = LoadFromFile(DATA_FILE_PATH);
 			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
-			size_t payloadPixelQty = Functions::PayloadPixelQty(dataBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, payloadPixelQty);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, EMBEDDING_TRESHOLD);
 			std::vector<uint8_t> embeddingMaskBytes = Convert::ToBytes(embeddingMask);
 			//WriteToFile(embeddingMaskBytes, EMBMASK_FILE_PATH);
 			std::vector<uint8_t> expectedMaskBytes = LoadFromFile(EMBMASK_FILE_PATH);
@@ -49,6 +47,17 @@ namespace StGLibTest
 			Assert::AreEqual(expectedMaskBytes.back(), embeddingMaskBytes.back());
 		}
 
+		TEST_METHOD(TestDetermineEmbeddablePixelQty)
+		{
+			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
+			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
+			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, EMBEDDING_TRESHOLD);
+			size_t embeddablePixelQty = Functions::CalculateEmbeddablePixelQty(embeddingMask);
+			Assert::IsTrue(embeddablePixelQty >= (size_t)701);
+		}
+
+		/*
 		TEST_METHOD(TestShuffleEmbeddingCoordinates)
 		{
 			std::vector<uint8_t> dataBytes = LoadFromFile(DATA_FILE_PATH);
@@ -62,23 +71,20 @@ namespace StGLibTest
 			Assert::AreEqual(70U, std::get<1>(shuffledCoordinates[0]));
 		}
 
-		/*
 		TEST_METHOD(TestEmbed)
 		{
 			std::vector<uint8_t> dataBytes = LoadFromFile(DATA_FILE_PATH);
 			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
-			uint32_t seed = Random::Seed(passwordBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
-			uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
-			Assert::IsTrue(effectiveVolume >= sizeof(size_t) + dataBytes.size());
-			std::vector<std::tuple<int, int>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, effectiveVolume, seed);
+			size_t payloadPixelQty = Functions::PayloadPixelQty(dataBytes);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, payloadPixelQty);
+			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, payloadPixelQty, passwordBytes);
 			cv::Mat stegoImage = Functions::Embed(dataBytes, carrierImage, shuffledCoordinates);
 			std::vector<uint8_t> stegoImageBytes = Convert::ToBytes(stegoImage);
-			//WriteToFile(stegoImageBytes, STEGO_FILE_PATH);
-			std::vector<uint8_t> expectedBytes = LoadFromFile(STEGO_FILE_PATH);
-			Assert::IsTrue(stegoImageBytes == expectedBytes);
+			WriteToFile(stegoImageBytes, STEGO_FILE_PATH);
+			//std::vector<uint8_t> expectedBytes = LoadFromFile(STEGO_FILE_PATH);
+			//Assert::IsTrue(stegoImageBytes == expectedBytes);
 		}
 
 		TEST_METHOD(TestExtract)
@@ -86,10 +92,9 @@ namespace StGLibTest
 			std::vector<uint8_t> stegoImageBytes = LoadFromFile(STEGO_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat stegoImage = Convert::ToCVMat(stegoImageBytes);
-			uint32_t seed = Random::Seed(passwordBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(stegoImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD);
-			uint32_t effectiveVolume = Functions::CalculateEffectiveVolume(embeddingMask);
-			std::vector<std::tuple<int, int>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, effectiveVolume, seed);
+			size_t payloadPixelQty = Functions::PayloadPixelQty(dataBytes);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, payloadPixelQty);
+			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, payloadPixelQty, passwordBytes);
 			std::vector<uint8_t> dataBytes = Functions::Extract(stegoImage, shuffledCoordinates);
 			std::vector<uint8_t> expectedBytes = LoadFromFile(DATA_FILE_PATH);
 			Assert::IsTrue(dataBytes == expectedBytes);

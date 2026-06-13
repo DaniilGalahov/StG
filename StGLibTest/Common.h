@@ -20,6 +20,6 @@ bool AreEqual(const cv::Mat& a, const cv::Mat& b);
 #define STEGO_FILE_PATH "..\\..\\files\\stego.png"
 
 #define EMBEDDING_BLOCK_SIZE 8
-#define EMBEDDING_TRESHOLD 0.7
+#define EMBEDDING_TRESHOLD 0.5
 
 #define PASSWORD "People are like water - they will always find a way."
