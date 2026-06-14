@@ -15,7 +15,7 @@ namespace Functions
 
 	size_t PayloadPixelQty(std::vector<uint8_t> dataBytes);
 
-	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, const std::vector<uint8_t>& passwordBytes, double_t treshold);
+	cv::Mat DetermineEmbeddingMask(const cv::Mat& carrierImage, uint32_t blockSize, double_t treshold, const std::vector<uint8_t>& passwordBytes);
 
 	size_t CalculateEmbeddablePixelQty(const cv::Mat& embeddingMask);
 

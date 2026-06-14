@@ -38,7 +38,7 @@ namespace StGLibTest
 			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, EMBEDDING_TRESHOLD);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD, passwordBytes);
 			std::vector<uint8_t> embeddingMaskBytes = Convert::ToBytes(embeddingMask);
 			//WriteToFile(embeddingMaskBytes, EMBMASK_FILE_PATH);
 			std::vector<uint8_t> expectedMaskBytes = LoadFromFile(EMBMASK_FILE_PATH);
@@ -47,28 +47,29 @@ namespace StGLibTest
 			Assert::AreEqual(expectedMaskBytes.back(), embeddingMaskBytes.back());
 		}
 
-		TEST_METHOD(TestDetermineEmbeddablePixelQty)
+		TEST_METHOD(TestCalculateEmbeddablePixelQty)
 		{
 			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, EMBEDDING_TRESHOLD);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD, passwordBytes);
 			size_t embeddablePixelQty = Functions::CalculateEmbeddablePixelQty(embeddingMask);
-			Assert::IsTrue(embeddablePixelQty >= (size_t)701);
+			std::vector<uint8_t> dataBytes = LoadFromFile(DATA_FILE_PATH);
+			size_t expectedQty = Functions::PayloadPixelQty(dataBytes);
+			Assert::IsTrue(embeddablePixelQty >= expectedQty);
 		}
 
-		/*
 		TEST_METHOD(TestShuffleEmbeddingCoordinates)
 		{
 			std::vector<uint8_t> dataBytes = LoadFromFile(DATA_FILE_PATH);
 			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
-			size_t payloadPixelQty = Functions::PayloadPixelQty(dataBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, payloadPixelQty);
-			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, payloadPixelQty, passwordBytes);
-			Assert::AreEqual(105U, std::get<0>(shuffledCoordinates[0]));
-			Assert::AreEqual(70U, std::get<1>(shuffledCoordinates[0]));
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD, passwordBytes);
+			size_t embeddablePixelQty = Functions::CalculateEmbeddablePixelQty(embeddingMask);
+			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, embeddablePixelQty, passwordBytes);
+			Assert::AreEqual(12U, std::get<0>(shuffledCoordinates[0]));
+			Assert::AreEqual(63U, std::get<1>(shuffledCoordinates[0]));
 		}
 
 		TEST_METHOD(TestEmbed)
@@ -77,14 +78,17 @@ namespace StGLibTest
 			std::vector<uint8_t> carrierImageBytes = LoadFromFile(CARRIER_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat carrierImage = Convert::ToCVMat(carrierImageBytes);
-			size_t payloadPixelQty = Functions::PayloadPixelQty(dataBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, payloadPixelQty);
-			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, payloadPixelQty, passwordBytes);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD, passwordBytes);
+			size_t embeddablePixelQty = Functions::CalculateEmbeddablePixelQty(embeddingMask);
+			Assert::IsTrue(embeddablePixelQty >= Functions::PayloadPixelQty(dataBytes));
+			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, embeddablePixelQty, passwordBytes);
 			cv::Mat stegoImage = Functions::Embed(dataBytes, carrierImage, shuffledCoordinates);
 			std::vector<uint8_t> stegoImageBytes = Convert::ToBytes(stegoImage);
-			WriteToFile(stegoImageBytes, STEGO_FILE_PATH);
-			//std::vector<uint8_t> expectedBytes = LoadFromFile(STEGO_FILE_PATH);
-			//Assert::IsTrue(stegoImageBytes == expectedBytes);
+			//WriteToFile(stegoImageBytes, STEGO_FILE_PATH);
+			std::vector<uint8_t> expectedBytes = LoadFromFile(STEGO_FILE_PATH);
+			Assert::IsTrue(expectedBytes == stegoImageBytes);
+			Assert::AreEqual(expectedBytes[0], stegoImageBytes[0]);
+			Assert::AreEqual(expectedBytes.back(), stegoImageBytes.back());
 		}
 
 		TEST_METHOD(TestExtract)
@@ -92,13 +96,14 @@ namespace StGLibTest
 			std::vector<uint8_t> stegoImageBytes = LoadFromFile(STEGO_FILE_PATH);
 			std::vector<uint8_t> passwordBytes = ToBytes(PASSWORD);
 			cv::Mat stegoImage = Convert::ToCVMat(stegoImageBytes);
-			size_t payloadPixelQty = Functions::PayloadPixelQty(dataBytes);
-			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(carrierImage, EMBEDDING_BLOCK_SIZE, passwordBytes, payloadPixelQty);
-			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, payloadPixelQty, passwordBytes);
+			cv::Mat embeddingMask = Functions::DetermineEmbeddingMask(stegoImage, EMBEDDING_BLOCK_SIZE, EMBEDDING_TRESHOLD, passwordBytes);
+			size_t embeddablePixelQty = Functions::CalculateEmbeddablePixelQty(embeddingMask);
+			std::vector<std::tuple<uint32_t, uint32_t>> shuffledCoordinates = Functions::ShuffleEmbeddingCoordinates(embeddingMask, embeddablePixelQty, passwordBytes);
 			std::vector<uint8_t> dataBytes = Functions::Extract(stegoImage, shuffledCoordinates);
 			std::vector<uint8_t> expectedBytes = LoadFromFile(DATA_FILE_PATH);
-			Assert::IsTrue(dataBytes == expectedBytes);
+			Assert::IsTrue(expectedBytes == dataBytes);
+			Assert::AreEqual(expectedBytes[0], dataBytes[0]);
+			Assert::AreEqual(expectedBytes.back(), dataBytes.back());
 		}
-		*/
 	};
 }
