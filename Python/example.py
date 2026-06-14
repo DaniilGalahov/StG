@@ -45,13 +45,14 @@ def write_bytes(path, data):
 
 def embed(data_path, carrier_path, password, stego_path):
     # Read file bytes
-    carrier_bytes = read_bytes(carrier_path)
     data_bytes = read_bytes(data_path)
+    carrier_bytes = read_bytes(carrier_path)
+    password_bytes = bytearray(password, "utf-8")
 
     # Prepare pointers
     carrier_ptr = (c_uint8 * len(carrier_bytes))(*carrier_bytes)
     data_ptr = (c_uint8 * len(data_bytes))(*data_bytes)
-    password_ptr = (c_uint8 * len(password))(*password)
+    password_ptr = (c_uint8 * len(password_bytes))(*password_bytes)
 
     stego_ptr = POINTER(c_uint8)()
     stego_size = c_size_t()
@@ -82,10 +83,11 @@ def embed(data_path, carrier_path, password, stego_path):
 def extract(stego_path, password, extracted_path):
     # Read file bytes
     stego_bytes = read_bytes(stego_path)
+    password_bytes = bytearray(password, "utf-8")
 
     # Prepare pointers
     stego_ptr = (c_uint8 * len(stego_bytes))(*stego_bytes)
-    password_ptr = (c_uint8 * len(password))(*password)
+    password_ptr = (c_uint8 * len(password_bytes))(*password_bytes)
 
     extracted_ptr = POINTER(c_uint8)()
     extracted_size = c_size_t()
@@ -119,7 +121,7 @@ carrier_path = os.path.join(files_dir, "carrier.png")
 stego_path = os.path.join(files_dir, "stego.png")
 extracted_path = os.path.join(files_dir, "extracted.txt")
 
-password = b"People are like water - they will always find a way."
+password = "People are like water - they will always find a way."
 
 embed(data_path, carrier_path, password, stego_path)
 
