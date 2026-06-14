@@ -4,7 +4,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "Convert.h"
-#include "Random.h"
+#include "PRNG.h"
 #include "Functions.h"
 
 namespace StGLib
