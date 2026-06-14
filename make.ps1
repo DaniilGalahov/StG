@@ -19,7 +19,7 @@ Copy-Item -Path ".\docs\License.pdf" -Destination ".\dist"
 Copy-Item -Path ".\OpenCV.txt" -Destination ".\dist"
 
 # Compress archive
-Compress-Archive -Path ".\dist\*" -Destination ".\dist\StG $(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').zip"
+Compress-Archive -Path ".\dist\*" -Destination ".\dist\StG_$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss').zip"
 
 
 PAUSE
